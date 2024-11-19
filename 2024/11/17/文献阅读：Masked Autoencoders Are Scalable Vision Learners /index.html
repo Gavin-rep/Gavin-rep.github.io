@@ -1,0 +1,317 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>文献阅读: Masked Autoencoders Are Scalable Vision Learners | Gavin</title><meta name="author" content="Gavin"><meta name="copyright" content="Gavin"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Facebook AI Research (FAIR) 2021 引言​	本文表明，掩膜自动编码器( MAE )是可扩展的计算机视觉自监督学习器。我们的MAE方法比较简单：我们对输入图像的随机块进行掩膜，并重建缺失的像素。它基于两个核心设计。首先，我们开发了一个非对称的编码器-解码器架构，其中编码器只运行在补丁(没有掩码令牌)的可见子集上，同时一个轻量级解码器从潜在表示和掩码令牌中重建原始图像。其">
+<meta property="og:type" content="article">
+<meta property="og:title" content="文献阅读: Masked Autoencoders Are Scalable Vision Learners">
+<meta property="og:url" content="http://example.com/2024/11/17/%E6%96%87%E7%8C%AE%E9%98%85%E8%AF%BB%EF%BC%9AMasked%20Autoencoders%20Are%20Scalable%20Vision%20Learners%20/index.html">
+<meta property="og:site_name" content="Gavin">
+<meta property="og:description" content="Facebook AI Research (FAIR) 2021 引言​	本文表明，掩膜自动编码器( MAE )是可扩展的计算机视觉自监督学习器。我们的MAE方法比较简单：我们对输入图像的随机块进行掩膜，并重建缺失的像素。它基于两个核心设计。首先，我们开发了一个非对称的编码器-解码器架构，其中编码器只运行在补丁(没有掩码令牌)的可见子集上，同时一个轻量级解码器从潜在表示和掩码令牌中重建原始图像。其">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.ibb.co/gD7cJGh/image.png">
+<meta property="article:published_time" content="2024-11-17T12:30:01.804Z">
+<meta property="article:modified_time" content="2024-11-19T13:34:14.806Z">
+<meta property="article:author" content="Gavin">
+<meta property="article:tag" content="深度学习">
+<meta property="article:tag" content="计算机视觉">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.ibb.co/gD7cJGh/image.png"><link rel="shortcut icon" href="https://i.ibb.co/3BGBwps/2c8b98a62fbc3615.png"><link rel="canonical" href="http://example.com/2024/11/17/%E6%96%87%E7%8C%AE%E9%98%85%E8%AF%BB%EF%BC%9AMasked%20Autoencoders%20Are%20Scalable%20Vision%20Learners%20/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '文献阅读: Masked Autoencoders Are Scalable Vision Learners',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-11-19 21:34:14'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://i.ibb.co/ch2RrDp/20230822001522.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">37</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">17</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://i.ibb.co/gD7cJGh/image.png')"><nav id="nav"><span id="blog-info"><a href="/" title="Gavin"><img class="site-icon" src="https://i.ibb.co/3BGBwps/2c8b98a62fbc3615.png"/><span class="site-name">Gavin</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">文献阅读: Masked Autoencoders Are Scalable Vision Learners</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-11-17T12:30:01.804Z" title="发表于 2024-11-17 20:30:01">2024-11-17</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-11-19T13:34:14.806Z" title="更新于 2024-11-19 21:34:14">2024-11-19</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%96%87%E7%8C%AE%E9%98%85%E8%AF%BB/">文献阅读</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="文献阅读: Masked Autoencoders Are Scalable Vision Learners"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>Facebook AI Research (FAIR) 2021</p>
+<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>​	本文表明，掩膜自动编码器( MAE )是可扩展的计算机视觉自监督学习器。我们的MAE方法比较简单：我们对输入图像的随机块进行掩膜，并重建缺失的像素。它基于两个核心设计。首先，我们开发了一个非对称的编码器-解码器架构，其中编码器只运行在补丁(没有掩码令牌)的可见子集上，同时一个轻量级解码器从潜在表示和掩码令牌中重建原始图像。其次，我们发现掩蔽高比例的输入图像，例如75 %，会产生一个非平凡的、有意义的自我监督任务。耦合这两种设计使我们能够高效有效地训练大型模型：我们加速训练( 3 ×以上)并提高精度。我们的可扩展方法允许学习泛化能力强的高容量模型：例如，在仅使用ImageNet - 1K数据的方法中，香草ViT - Huge模型取得了最好的准确率( 87.8 % )。下游任务中的迁移性能优于监督预训练，并表现出良好的扩展行为。 </p>
+<h2 id="1-介绍"><a href="#1-介绍" class="headerlink" title="1.介绍"></a>1.介绍</h2><p>​	深度学习已经见证了不断增长的能力和容量[ 33、25、57]架构的爆炸。得益于硬件的快速发展，如今的模型可以轻松适应一百万张图像[ 13 ]，并开始需求数以亿计的通常是公开不可标记的图像[ 16 ]。</p>
+<p>​	这种对数据的偏好在自然语言处理( NLP )中通过自监督预训练得到了成功的解决。这些解决方案基于GPT [ 47、48、4]中的自回归语言建模和BERT中的屏蔽自动编码[ 14 ]，在概念上很简单：它们移除一部分数据并学习预测移除的内容。这些方法现在能够训练包含超过一千亿个参数的可泛化NLP模型[ 4 ]。</p>
+<p>​	掩码自动编码器的想法，一种更一般的去噪自动编码器的形式[ 58 ]，是自然的，也适用于计算机视觉。确实，密切相关的研究在视觉中，[ 59、46]先于BERT。然而，尽管随着BERT的成功，人们对这一想法产生了极大的兴趣，但视觉上的自动编码方法的进展却落后于NLP。我们追问：是什么使得蒙面自动编码在视觉和语言之间存在差异?我们试图从以下几个角度来回答这个问题：</p>
+<p>​	( i )直到最近，架构是不同的。在视觉方面，卷积网络[ 34 ]在过去十年中占据主导地位[ 33 ]。卷积通常在规则网格上运行，将”指示符” (如掩码令牌[ 14 ]或位置嵌入[ 57 ] )集成到卷积网络中并不简单。然而，随着视觉变压器( Vision Transformers，ViT ) [ 16 ]的引入，这架构差距已经得到了解决，不再是一个障碍。</p>
+<p>​	(ii) 信息密度在语言和视觉之间存在差异。语言是人为生成的信号，高度语义化且信息密度很高。当训练一个模型去预测每个句子中只有少量缺失的单词时，这项任务似乎能够引发对语言的复杂理解。相反，图像是自然信号，具有很强的空间冗余性——例如，一个缺失的图像块可以通过相邻的块恢复，而无需对部件、物体和场景进行高层次理解。为了克服这种差异并鼓励学习有用的特征，我们发现一个简单的策略在计算机视觉中效果很好：对随机图像块进行高比例的遮挡（masking）。这种策略大幅减少了冗余性，并创造了一个具有挑战性的自监督任务，需要超越低层次图像统计的整体理解。为了直观感受我们的重建任务，请参见图 2 至图 4。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Gavin-rep/Pictures@master/image-20241117213535156.png" alt="image-20241117213535156"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/Gavin-rep/Pictures@master/image-20241117213544807.png" alt="image-20241117213544807"></p>
+<h2 id="2-最近工作"><a href="#2-最近工作" class="headerlink" title="2. 最近工作"></a>2. 最近工作</h2><p>屏蔽语言建模及其自回归模型，如BERT [ 14 ]和GPT [ 47、48、4]，是NLP中非常成功的预训练方法。这些方法保留一部分输入序列并训练模型来预测缺失内容。这些方法已经被证明具有良好的可扩展性[ 4 ]，大量的证据表明这些预训练的表示能够很好地推广到各种下游任务。</p>
+<p><strong>掩蔽语言模型</strong>及其自回归对应方法（例如 BERT [14] 和 GPT [47, 48, 4]）在自然语言处理（NLP）预训练中取得了巨大成功。这些方法会屏蔽输入序列的一部分，并训练模型预测缺失的内容。这些方法已被证明具有卓越的可扩展性 [4]，而大量证据表明这些预训练表示在各种下游任务中都具有良好的泛化能力。</p>
+<p><strong>自编码器</strong>是一种经典的表示学习方法。它包括一个编码器，将输入映射到潜在表示，以及一个解码器，用于重建输入。例如，主成分分析（PCA）和 k-means 都是自编码器 [29]。去噪自编码器（Denoising Autoencoders, DAE）[58] 是自编码器的一类，通过对输入信号进行破坏并学习重建原始未破坏信号。一系列方法可以被看作是针对不同破坏方式的广义 DAE，例如遮挡像素 [59, 46, 6] 或移除颜色通道 [70]。我们的 MAE（Masked Autoencoding）是一种去噪自编码，但在许多方面与经典的 DAE 不同。</p>
+<p><strong>掩蔽图像编码</strong>方法通过屏蔽破坏的图像学习表示。[59] 的开创性工作提出将屏蔽作为 DAE 中的一种噪声类型。Context Encoder [46] 使用卷积网络对大面积缺失区域进行修复（inpainting）。受 NLP 成功经验的启发，近期的一些相关方法 [6, 16, 2] 基于 Transformers [57] 进行开发。例如，iGPT [6] 以像素序列为操作对象，并预测未知像素；ViT 论文 [16] 研究了自监督学习中的掩蔽块预测；最近的 BEiT [2] 提出了预测离散标记 [44, 50] 的方法。</p>
+<p><strong>自监督学习</strong>方法在计算机视觉领域备受关注，通常集中于不同的先验任务（pretext tasks）进行预训练 [15, 61, 42, 70, 45, 17]。近年来，对比学习（contrastive learning）[3, 22] 变得流行，例如 [62, 43, 23, 7]，这些方法通过对两个或多个视图之间的相似性和差异性（或仅相似性 [21, 8]）进行建模来学习特征。对比学习及相关方法强烈依赖于数据增强 [7, 21, 8]。相比之下，自编码方法采用了一种概念上不同的方向，并表现出与对比学习显著不同的特性，正如我们将要展示的那样。</p>
+<h2 id="3-方法"><a href="#3-方法" class="headerlink" title="3. 方法"></a>3. 方法</h2><p>我们的掩蔽自编码器（Masked Autoencoder，MAE）是一种简单的自编码方法，其目标是在给定部分观察的情况下重建原始信号。与所有自编码器一样，我们的方法包括一个编码器，它将观察到的信号映射到潜在表示，以及一个解码器，它从潜在表示中重建原始信号。然而，与经典自编码器不同，我们采用了一种不对称设计，使编码器仅处理部分观察到的信号（不包含掩蔽标记），而解码器则是轻量化的，从潜在表示和掩蔽标记中重建完整信号。图 1 展示了这一思路，具体细节如下。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Gavin-rep/Pictures@master/image-20241117214709731.png" alt="image-20241117214709731"></p>
+<p><strong>掩蔽（Masking）</strong>.按照 ViT [16] 的方法，我们将图像分割为规则的、互不重叠的图像块（patch）。然后，随机采样一个子集并掩蔽（即移除）剩余部分。我们的采样策略非常简单：在不放回的情况下随机采样图像块，遵循均匀分布。我们将此称为“随机采样”。</p>
+<p>使用高掩蔽率（即移除的图像块比例较高）的随机采样可以大幅减少冗余，从而创建一个无法通过可见邻近图像块轻易推断解决的任务（见图 2 至图 4）。均匀分布避免了潜在的中心偏差（即图像中心附近更多的掩蔽块）。高度稀疏的输入也为设计高效的编码器提供了机会，如下所述。</p>
+<p><strong>MAE 编码器</strong>.我们的编码器是一个仅应用于可见（未掩蔽）图像块的 ViT [16]。与标准 ViT 一样，编码器通过线性投影和位置嵌入将图像块转化为嵌入表示，然后通过一系列 Transformer 块处理得到的集合。然而，我们的编码器仅对完整图像块集合的一个小子集（例如 25%）进行操作。掩蔽块被移除，不使用掩蔽标记。这种方法允许我们使用较少的计算量和内存训练非常大的编码器。完整的图像块集合则交由轻量化解码器处理，如下所述。</p>
+<p><strong>MAE 解码器</strong>.解码器的输入是完整的标记集合，包括：（i）编码后的可见图像块，以及（ii）掩蔽标记（见图 1）。每个掩蔽标记 [14] 是一个共享的、可学习的向量，表示需要预测的缺失图像块。我们为完整集合中的所有标记添加位置嵌入；否则，掩蔽标记将无法获知其在图像中的位置。解码器包含另一系列 Transformer 块。MAE 解码器仅在预训练期间用于完成图像重建任务（仅编码器用于生成图像表征以进行识别）。因此，解码器的架构可以灵活设计，与编码器的设计独立。我们尝试了非常小的解码器，通常比编码器更窄且更浅。例如，我们默认解码器的每个标记的计算量不到编码器的 10%。这种不对称设计使得完整的标记集合仅由轻量化解码器处理，从而显著缩短预训练时间。</p>
+<p><strong>重建目标</strong>.我们的 MAE 通过预测每个掩蔽图像块的像素值来重建输入。解码器输出的每个元素是一个像素值向量，表示一个图像块。解码器的最后一层是一个线性投影，其输出通道数等于一个图像块中的像素值数。解码器的输出被重新排列为重建的图像。我们的损失函数计算重建图像与原始图像在像素空间的均方误差（MSE）。损失仅在掩蔽图像块上计算，类似于 BERT [14]。我们还研究了重建目标为归一化像素值的变体。具体来说，我们计算每个图像块中所有像素的均值和标准差，并用它们对该图像块进行归一化。在实验中，使用归一化像素值作为重建目标提高了表征质量。</p>
+<p><strong>简单实现</strong>.我们的 MAE 预训练可以高效实现，且无需任何特殊的稀疏操作。首先，我们为每个输入图像块生成一个标记（通过线性投影并添加位置嵌入）。接着，我们随机打乱标记列表，并根据掩蔽率移除列表的最后一部分。这一过程相当于不放回采样图像块，从而生成一个供编码器使用的小标记子集。编码完成后，我们将一组掩蔽标记附加到编码后的图像块列表中，并对完整列表进行反向打乱操作（即还原随机打乱操作），使所有标记与其目标对齐。解码器应用于这一完整列表（并添加位置嵌入）。正如前述，无需稀疏操作。这种简单实现引入的开销可以忽略不计，因为打乱和还原操作非常快速。</p>
+<h2 id="4-ImageNet-实验"><a href="#4-ImageNet-实验" class="headerlink" title="4. ImageNet 实验"></a>4. ImageNet 实验</h2><p>我们在 ImageNet-1K (IN1K) [13] 训练集上进行自监督预训练，然后通过以下两种方式评估表征能力：（i）端到端微调和（ii）线性探测。我们报告单张 224×224 图像裁剪的 top-1 验证准确率。具体细节见附录 A.1。</p>
+<p><strong>基线模型：ViT-Large</strong>.我们在消融实验中使用 ViT-Large (ViT-L&#x2F;16) [16] 作为主干网络。ViT-L 的规模非常大（比 ResNet-50 [25] 大一个数量级），且容易过拟合。以下是从头训练的 ViT-L 与基于 MAE 预训练进行微调的对比：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Gavin-rep/Pictures@master/image-20241117220217042.png" alt="image-20241117220217042"></p>
+<p>我们注意到，从头监督训练 ViT-L 并非易事，需要一个良好的训练策略并使用强正则化（达到 82.5%，见附录 A.2）。即便如此，MAE 预训练依然带来了显著的性能提升。此外，微调仅需 50 个 epoch（相比从头训练的 200 个 epoch），这表明微调的准确率高度依赖于预训练。</p>
+<h3 id="4-1-主要性质"><a href="#4-1-主要性质" class="headerlink" title="4.1 主要性质"></a>4.1 主要性质</h3><p>我们对 MAE 的各项设计进行消融实验，使用表 1 的默认设置（见表注），观察到以下一些有趣的现象：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Gavin-rep/Pictures@master/image-20241117220707341.png" alt="image-20241117220707341"></p>
+<p><strong>掩蔽比例</strong>.如图 5 所示，掩蔽比例对模型表现的影响非常显著，且最佳比例出乎意料地高。75% 的掩蔽比例对于线性探测和微调都表现良好。这与 BERT [14] 的典型掩蔽比例（15%）形成鲜明对比，同时也显著高于其他视觉领域相关研究中的比例（20% 到 50%，见 [6, 16, 2]）。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Gavin-rep/Pictures@master/image-20241117221256882.png" alt="image-20241117221256882"></p>
+<p>模型通过推断缺失图像块来生成不同但合理的输出（见图 4），能够理解对象和场景的整体结构（gestalt），这不是简单地延展线条或纹理就能完成的。我们假设这种类似推理的行为有助于学习到更有用的表征。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Gavin-rep/Pictures@master/image-20241117221409257.png" alt="image-20241117221409257"></p>
+<p>此外，图 5 表明线性探测和微调对掩蔽比例的敏感度不同：</p>
+<p><strong>线性探测</strong>：准确率随着掩蔽比例的增加而稳步上升，直至达到最佳点，准确率差距高达约 20%（54.6% vs. 73.5%）。</p>
+<p><strong>微调</strong>：结果对掩蔽比例的敏感度较低，40% 至 80% 的比例均表现良好。微调的所有结果均优于从零开始训练的表现（82.5%）。</p>
+<p><strong>解码器设计</strong></p>
+<p>MAE 解码器的设计非常灵活，我们在表 1a 和 1b 中研究了不同的设计。</p>
+<p>​	1.<strong>解码器深度</strong>（Transformer 块数量，表 1a）：</p>
+<p>​	•对于线性探测，解码器需要足够深。这是因为像素重建任务与识别任务之间存在差距：自编码器的最后几层更加专注于重建，而与识别相关性较低。足够深的解码器能够有效处理重建任务，从而让编码器的潜在表征更抽象化。这种设计可使线性探测的准确率提高多达 8%（见表 1a, ‘lin’）。</p>
+<p>​	•对于微调，编码器的最后几层可以通过训练适应识别任务，因此解码器深度对微调的影响较小（见表 1a, ‘ft’）。</p>
+<p>值得注意的是，即使使用单块解码器，MAE 仍能在微调中表现出色（84.8%）。单块 Transformer 是将可见标记信息传播到掩蔽标记的最小要求，而这种小型解码器还能显著加快训练速度。</p>
+<p>​	2.<strong>解码器宽度</strong>（通道数量，表 1b）：</p>
+<p>​	•默认宽度为 512 维，在微调和线性探测中均表现良好。更窄的解码器在微调中依然表现良好。</p>
+<p>总体来看，默认MAE解码器非常轻量化，包含 8 个块和 512 维宽度（表 1 中灰色部分）。每个标记的浮点运算量（FLOPs）仅为 ViT-L 的 9%（24 个块，1024 维）。尽管解码器处理的是所有标记，但其计算开销仅占整体的一小部分。</p>
+<p><strong>掩蔽标记设计</strong> MAE 的一个重要设计是跳过编码器中的掩蔽标记 [M]，仅在轻量解码器中使用。表 1c 探讨了这一设计。</p>
+<p>​	•<strong>若在编码器中使用掩蔽标记</strong>：性能下降显著，线性探测准确率降低 14%。原因是编码器在预训练时接收到大量掩蔽标记，而在实际部署中却不存在这些标记，这种不一致可能会降低部署时的准确率。</p>
+<p>​	•<strong>移除编码器中的掩蔽标记</strong>：编码器始终只处理真实图像块，提高了准确率，并大幅降低了计算开销。表 1c 中，总训练 FLOPs 减少了 3.3 倍，在我们实现中带来了 2.8 倍的实际训练加速。</p>
+<p>​	•对于单块解码器、大型编码器（如 ViT-H），或更高掩蔽比例（75%），加速比甚至超过 4 倍。这部分是因为自注意力机制的复杂度是二次的。此外，内存需求显著降低，使得更大模型的训练成为可能，或通过更大批量进一步加速。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Gavin-rep/Pictures@master/image-20241117222421103.png" alt="image-20241117222421103"></p>
+<p>时间和内存效率的显著提升，使得 MAE 成为训练超大模型的理想选择。</p>
+<p><strong>重建目标</strong>。我们在表 1d 中比较了不同的重建目标。到目前为止，我们的结果基于未归一化的像素（每个图像块独立处理）。使用归一化的像素可以提高准确率。这种每个图像块的归一化方法增强了局部的对比度。在另一种变体中，我们在图像块空间上执行 PCA，并使用最大的 PCA 系数（此处为 96 个）作为目标。这样做会降低准确率。这两种实验表明高频成分在我们的方法中是有用的。</p>
+<p>​	我们还比较了一种 MAE 的变体，其预测目标为标记（tokens），这是 BEiT [2] 中使用的目标。具体而言，对于这种变体，我们使用预训练的 DALLE 的 dVAE [50] 作为标记器（tokenizer），遵循 [2] 的方法。此时 MAE 的解码器使用交叉熵损失来预测标记索引。这种标记化方法相较于未归一化像素能提升微调准确率 0.4%，但相较于归一化像素无任何优势。此外，这种方法降低了线性探测准确率。在 §5 中我们进一步展示了标记化在迁移学习中并非必要。</p>
+<p>​	我们的基于像素的 MAE 比标记化方法更简单。dVAE 标记器需要一个额外的预训练阶段，可能依赖额外数据（250M 张图像 [50]）。dVAE 编码器是一个大的卷积网络，其 FLOPs 为 ViT-L 的 40%，并增加了非平凡的开销。使用像素目标不存在这些问题。</p>
+<p><strong>数据增强</strong>。我们在表 1e 中研究了数据增强对 MAE 预训练的影响。</p>
+<p>​	我们的 MAE 仅使用裁剪增强（cropping-only augmentation）即可很好地工作，无论是固定尺寸裁剪还是随机尺寸裁剪（两者均包含随机水平翻转）。加入颜色抖动（color jittering）会降低结果，因此我们在其他实验中未使用。</p>
+<p>​	令人惊讶的是，即便仅使用中心裁剪（不翻转），MAE 仍然表现良好。这种性质与对比学习和相关方法 [62, 23, 7, 21] 截然不同，这些方法严重依赖数据增强。例如，研究表明 [21]，仅使用裁剪增强会使 BYOL [21] 和 SimCLR [7] 的准确率分别下降 13% 和 28%。此外，目前没有证据表明对比学习可以在无增强情况下工作：图像的两个视图是相同的，容易满足一个平凡的解。</p>
+<p>​	在 MAE 中，数据增强的作用主要由随机掩蔽（random masking）完成（将在下文进行对比实验）。掩蔽在每次迭代中是不同的，因此无论是否使用数据增强，它们都会生成新的训练样本。由于掩蔽增加了任务难度，对数据增强的需求减少了。</p>
+<p><strong>掩蔽采样策略</strong>。我们在表 1f 和图 6 中比较了不同的掩蔽采样策略。</p>
+<p>​	块状掩蔽（block-wise masking）策略最早由 [2] 提出，其倾向于移除较大的块（见图 6 中间）。在掩蔽比例为 50% 时，我们的 MAE 使用块状掩蔽表现尚可，但在掩蔽比例为 75% 时性能下降。这一任务比随机采样更难，因为我们观察到训练损失更高，且重建结果更模糊。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Gavin-rep/Pictures@master/image-20241117224209184.png" alt="image-20241117224209184"></p>
+<p>​	我们还研究了网格掩蔽（grid-wise masking）策略，其规则性地保留每 4 个图像块中的 1 个（见图 6 右）。这种策略任务较简单，训练损失较低，重建结果也更清晰。然而，这种方法的表征质量较低。</p>
+<p>​	随机采样（random sampling）对 MAE 表现最好。它支持更高的掩蔽比例，从而带来更大的速度提升，同时还能保持良好的准确率。</p>
+<p><strong>训练周期</strong>。我们的所有消融实验均基于 800 轮预训练。图 7 显示了训练周期长度的影响。随着训练时间的延长，准确率稳步提高。即便在 1600 轮时，我们也未观察到线性探测准确率的饱和。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Gavin-rep/Pictures@master/image-20241117225116161.png" alt="image-20241117225116161"></p>
+<p>这种行为与对比学习方法不同。例如，MoCo v3 [9] 在 300 轮时性能已达到饱和。需要注意的是，MAE 的编码器每轮仅看到 25% 的图像块，而对比学习中编码器每轮可能会看到 200%（双裁剪）甚至更多（多裁剪）的图像块。</p>
+<h3 id="4-2-与之前方法的对比"><a href="#4-2-与之前方法的对比" class="headerlink" title="4.2 与之前方法的对比"></a>4.2 与之前方法的对比</h3><p><strong>与自监督方法的对比</strong>。在表 3 中，我们比较了自监督 ViT 模型的微调结果。对于 ViT-B，各方法的表现相近。而对于 ViT-L，不同方法之间的差距更大，这表明更大模型的主要挑战在于减少过拟合。</p>
+<p>​	我们的 MAE 可以轻松扩展，并且随着模型规模增大表现出稳定的改进。我们使用 ViT-H（224 尺寸）获得了 86.9% 的准确率。通过微调 448 尺寸，我们仅使用 IN1K 数据达到了 87.8% 的准确率。在所有仅使用 IN1K 数据的方法中，之前的最佳准确率是 87.1%（512 尺寸）[67]，基于先进网络实现。在高度竞争的 IN1K 基准（无外部数据）中，我们以非平凡的幅度超越了最先进的结果。我们的结果基于vanilla ViT，我们预计使用先进网络会取得更好的性能。</p>
+<p>​	与 BEiT [2] 相比，我们的 MAE 准确率更高，同时更简单且更快。我们的方法重建像素，而 BEiT 预测标记（tokens）：BEiT 在用 ViT-B 重建像素时报告了 1.8% 的性能下降 [2]。我们不需要 dVAE 的预训练。此外，由于表 1c 中研究的原因，我们的 MAE 每轮训练速度比 BEiT 快 3.5 倍。</p>
+<p>​	表 3 中的 MAE 模型为了更高的准确率预训练了 1600 轮（见图 7）。尽管如此，在相同硬件下我们的总预训练时间仍然少于其他方法。例如，在 128 个 TPU-v3 核上训练 ViT-L，我们的 MAE 需要 31 小时完成 1600 轮，而 MoCo v3 完成 300 轮需要 36 小时 [9]。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Gavin-rep/Pictures@master/image-20241117230129786.png" alt="image-20241117230129786"></p>
+<p><strong>与监督预训练的对比</strong>。在原始的 ViT 论文 [16] 中，ViT-L 在 IN1K 上训练时性能下降。我们对监督训练的实现（见附录 A.2）表现更好，但准确率趋于饱和（见图 8）。</p>
+<p>​	我们的 MAE 预训练仅使用 IN1K 数据，却具有更好的泛化能力：高容量模型相比从零开始训练有更大的增益。其趋势与 [16] 中 JFT-300M 的监督预训练类似。这一比较表明，我们的 MAE 有助于扩展模型规模。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Gavin-rep/Pictures@master/image-20241117230330859.png" alt="image-20241117230330859"></p>
+<h3 id="4-3-部分微调"><a href="#4-3-部分微调" class="headerlink" title="4.3 部分微调"></a><strong>4.3 部分微调</strong></h3><p>​	表 1 显示了线性探测和微调结果之间基本没有相关性。线性探测在过去几年里是一个流行的协议；然而，它错过了追求强大但非线性特征的机会，而这正是深度学习的优势。作为一种折衷方案，我们研究了一种部分微调协议：微调最后几层，同时冻结其他层。这种协议在早期的工作中也有使用，例如 [65, 70, 42]。图 9 展示了实验结果。值得注意的是，仅微调一个 Transformer 块就显著提高了准确率，从 73.5% 提升至 81.0%。此外，如果我们只微调最后一个块的一半（即其 MLP 子块），准确率可以达到 79.1%，远高于线性探测的结果。这种变体本质上是微调一个 MLP 头。微调几个块（例如 4 或 6 个）可以达到接近全微调的准确率。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Gavin-rep/Pictures@master/image-20241117230507602.png" alt="image-20241117230507602"></p>
+<p>​	在图 9 中，我们还与 MoCo v3 [9] 进行了比较，MoCo v3 是一种对比学习方法，并提供了 ViT-L 的结果。MoCo v3 在线性探测准确率上更高；然而，它的所有部分微调结果都不如 MAE。当微调 4 个块时，差距为 2.6%。虽然 MAE 的表示较少线性可分，但它们是更强的非线性特征，并且在微调非线性头时表现良好。</p>
+<p>​	这些观察表明，线性可分性并不是评估表示质量的唯一指标。也有研究（例如，[8]）表明，线性探测与迁移学习表现之间的相关性较差，例如在目标检测任务中。根据我们的了解，线性评估在自然语言处理（NLP）中并不常用于预训练的基准测试。</p>
+<h2 id="5-迁移学习实验"><a href="#5-迁移学习实验" class="headerlink" title="5. 迁移学习实验"></a>5. 迁移学习实验</h2><p>​	我们使用表3中的预训练模型来评估下游任务中的迁移学习。</p>
+<p><strong>目标检测与分割</strong>。我们在COCO [37] 数据集上对Mask R-CNN [24] 进行了端到端的微调。ViT骨干网经过FPN [36] 的适配（见A.3）。我们将此方法应用于表4中的所有实验。我们报告了目标检测的box AP和实例分割的mask AP。与监督预训练相比，我们的MAE在所有配置下的表现更好（见表4）。在较小的ViT-B上，我们的MAE比监督预训练高出2.4个百分点（50.3 vs. 47.9，APbox）。更重要的是，在较大的ViT-L上，我们的MAE预训练比监督预训练高出4.0个百分点（53.3 vs. 49.3）。基于像素的MAE比基于token的BEiT更好，且MAE更简单、更快速。MAE和BEiT都优于MoCo v3，而MoCo v3与监督预训练持平。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Gavin-rep/Pictures@master/image-20241117231110632.png" alt="image-20241117231110632"></p>
+<p><strong>语义分割</strong>。我们在ADE20K [72] 数据集上使用UperNet [63] 进行了实验（见A.4）。表5显示，我们的预训练在监督预训练上显著提高了结果，例如在ViT-L上提高了3.7个百分点。我们的基于像素的MAE也优于基于token的BEiT。这些观察结果与在COCO上的结果一致。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Gavin-rep/Pictures@master/image-20241117231456689.png" alt="image-20241117231456689"></p>
+<p><strong>分类任务</strong>。表6研究了iNaturalists [56] 和Places [71] 任务上的迁移学习（见A.5）。在iNat上，我们的方法表现出了强大的扩展性：随着模型变大，准确率显著提高。我们的结果大幅超越了之前的最佳结果。在Places上，我们的MAE也优于之前的最佳结果 [19, 40]，这些结果是在数十亿图像上进行预训练得到的。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Gavin-rep/Pictures@master/image-20241117231508873.png" alt="image-20241117231508873"></p>
+<p><strong>像素与token的比较</strong>。表7比较了像素与token作为MAE重建目标的效果。虽然使用dVAE token比使用未归一化的像素更好，但在我们测试的所有案例中，使用归一化像素与使用dVAE token的效果在统计上没有显著差异。这再次表明，token化对我们的MAE来说并不是必须的。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Gavin-rep/Pictures@master/image-20241117231534365.png" alt="image-20241117231534365"></p>
+<h2 id="6-讨论和结论"><a href="#6-讨论和结论" class="headerlink" title="6. 讨论和结论"></a>6. 讨论和结论</h2><p>​	简单的算法能够很好地扩展，这是深度学习的核心。在自然语言处理（NLP）中，简单的自监督学习方法（例如，[47, 14, 48, 4]）使得通过指数级扩展模型获得好处成为可能。在计算机视觉中，尽管自监督学习取得了进展，但实际的预训练范式主要是监督式的（例如，[33, 51, 25, 16]）。本研究表明，在ImageNet和迁移学习中，自编码器——一种与NLP中的技术类似的简单自监督方法——提供了可扩展的好处。计算机视觉中的自监督学习现在可能正沿着与NLP类似的轨迹发展。</p>
+<p>​	另一方面，我们也注意到，图像和语言是性质不同的信号，这种差异需要谨慎处理。图像只是记录的光线，并没有像语言一样进行语义分解。我们不是试图去除对象，而是去除最有可能不形成语义段的随机块。同样，我们的MAE重建的是像素，而非语义实体。尽管如此，我们观察到（例如图4），我们的MAE能够推断出复杂的整体重建，表明它已经学习了许多视觉概念，即语义。我们假设这种行为是通过MAE内部丰富的隐藏表示实现的。我们希望这种观点能为未来的工作提供启发。</p>
+<p><strong>更广泛的影响</strong>。该方法根据训练数据集的学习统计信息来预测内容，因此将反映这些数据中的偏差，包括那些具有负面社会影响的偏差。该模型可能生成不存在的内容。在基于此工作生成图像时，这些问题需要进一步的研究和考虑。</p>
+<h2 id="A-实现细节"><a href="#A-实现细节" class="headerlink" title="A.实现细节"></a>A.实现细节</h2><h3 id="A-1-ImageNet-实验"><a href="#A-1-ImageNet-实验" class="headerlink" title="A.1 ImageNet 实验"></a>A.1 ImageNet 实验</h3><p><strong>ViT架构。</strong>我们遵循标准的ViT架构[16]。它包含一堆Transformer模块[57]，每个模块由一个多头自注意力块和一个MLP块组成，两者都包含LayerNorm（LN）[1]。编码器以LN结尾。由于MAE编码器和解码器的宽度不同，我们在编码器之后采用了一个线性投影层来匹配它。我们的MAE在编码器和解码器输入中都添加了位置嵌入[57]（使用正弦-余弦版本）。我们的MAE不使用相对位置或层缩放（这些在[2]的代码中使用）。我们从编码器输出中提取特征用于微调和线性探测。由于ViT有一个类标记[16]，为了适应这种设计，在我们的MAE预训练中，我们向编码器输入中附加了一个辅助虚拟标记。这个标记将作为训练分类器的类标记，用于线性探测和微调。没有这个标记（使用平均池化）时，我们的MAE表现也同样良好。</p>
+<p><strong>预训练。</strong>默认设置见表8。我们不使用颜色抖动、路径丢弃或梯度裁剪。我们使用xavier均匀分布[18]来初始化所有Transformer模块，遵循ViT的官方代码[16]。我们使用线性学习率缩放规则[20]：lr &#x3D; base lr × batchsize &#x2F; 256。</p>
+<p><strong>端到端微调。</strong>我们的微调遵循监督ViT训练的常见做法。默认设置见表9。我们使用按层学习率衰减[10]，参照[2]的方法。</p>
+<p><strong>线性探测。</strong>我们的线性分类器训练遵循[9]。见表10。我们观察到线性探测需要与端到端微调非常不同的策略。特别地，正则化通常对线性探测有害。参照[9]，我们禁用了许多常见的正则化策略：我们不使用mixup[69]、cutmix[68]、路径丢弃[30]或颜色抖动，并且将权重衰减设置为零。训练传统线性分类器（例如SVM [11]）时，常见做法是对分类器输入进行归一化。同样，当训练线性探测分类器时，归一化预训练特征也会有所帮助。参照[15]，我们采用了一个额外的BatchNorm层[31]，但不使用仿射变换（affine&#x3D;False）。该层应用于编码器产生的预训练特征，并位于线性分类器之前。我们注意到该层不会破坏线性性质，且训练后可以将其吸收到线性分类器中：它本质上是一个重新参数化的线性分类器。引入此层有助于在我们进行消融实验时校准不同变体之间的特征幅度，使它们能够使用相同的设置而无需进一步的学习率搜索。</p>
+<p><strong>部分微调。</strong>我们的MAE部分微调（§4.3）遵循表9中的设置，不同之处在于我们调整了微调的周期数。我们观察到调整更少模块需要更长的训练周期。我们将微调周期数设置为{50, 100, 200}，并根据每个微调模块的数量使用最优的周期数。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Gavin-rep/Pictures@master/image-20241119212346891.png" alt="image-20241119212346891"></p>
+<h3 id="A-2-从头ViT-L-H-监督训练"><a href="#A-2-从头ViT-L-H-监督训练" class="headerlink" title="A.2 从头ViT-L&#x2F;H 监督训练"></a>A.2 从头ViT-L&#x2F;H 监督训练</h3><p>​	我们发现，在ImageNet-1K上从头开始训练监督式ViT-L&#x2F;H并非易事，训练过程不稳定。尽管对于较小的模型已经有了强有力的基准和公开的实现[53]，但对于较大的ViT-L&#x2F;H模型，相关的训练方法尚未得到充分探索。直接将之前的方法应用于这些较大的模型不起作用，训练过程中经常出现NaN损失。我们在表11中提供了我们的训练方案。我们使用0.3的权重衰减（wd）、4096的较大批量大小，并进行较长时间的预热，遵循原始的ViT模型[16]。我们使用β2&#x3D;0.95，参照[6]的方法。我们使用表11中列出的正则化方法，并禁用其他方法，参照[64]。所有这些选择的目的是提高训练的稳定性。我们的方案能够顺利完成训练并避免NaN损失。ViT-L的准确率为82.6%（不使用EMA时为81.5%），ViT-H的准确率为83.1%（不使用EMA时为80.9%）。如果不使用EMA，ViT-L和ViT-H都表现出过拟合趋势。顺便提一下，我们的ViT-B训练方案达到了82.3%的准确率（不使用EMA时为82.1%），而[53]中的准确率为81.8%。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Gavin-rep/Pictures@master/image-20241119212329466.png" alt="image-20241119212329466"></p>
+<h3 id="A-3-COCO中的目标检测和分离"><a href="#A-3-COCO中的目标检测和分离" class="headerlink" title="A.3 COCO中的目标检测和分离"></a>A.3 COCO中的目标检测和分离</h3><p>​	我们将传统的ViT适配为在Mask R-CNN [24]中使用FPN（特征金字塔网络）骨干网[36]。ViT包含一堆Transformer模块，这些模块都在单一尺度上生成特征图（例如，步幅为16）。我们将这个堆栈均等地分为4个子集，并应用卷积来上采样或下采样中间特征图，以生成不同的尺度（步幅为4、8、16或32，和标准ResNet [25]相同）。FPN是基于这些多尺度特征图构建的。</p>
+<p>​	为了在不同方法之间进行公平比较，我们为表4中的每个条目（包括所有竞争方法）搜索超参数。我们搜索的超参数包括学习率、权重衰减、路径丢弃率和微调周期。我们将发布代码并附上具体的配置。有关完整的模型和训练细节，以及更多实验，详见[35]。</p>
+<h3 id="A-4-ADE20K中的语意分割"><a href="#A-4-ADE20K中的语意分割" class="headerlink" title="A.4 ADE20K中的语意分割"></a>A.4 ADE20K中的语意分割</h3><p>​	我们使用UperNet [63]，并遵循[2]的语义分割代码。我们进行了100个周期的端到端微调，批量大小为16。我们为表5中的每个条目（包括所有竞争方法）搜索最优的学习率。</p>
+<p>​	语义分割代码[2]使用了相对位置偏差[49]，而我们的MAE预训练没有使用它。为了公平比较，我们只在迁移学习时启用相对位置偏差，并将其初始化为零。我们注意到，在我们的BEiT复现中，我们在预训练和微调过程中都使用了相对位置偏差，遵循了他们的代码。</p>
+<h3 id="A-5-其他的分类任务"><a href="#A-5-其他的分类任务" class="headerlink" title="A.5 其他的分类任务"></a>A.5 其他的分类任务</h3><p>​	我们按照表9的设定对i Naturallist和Places进行微调(表6 )。我们对每个单独的数据集调整lr和微调历元。</p>
+<h2 id="B-线性探测结果的比较"><a href="#B-线性探测结果的比较" class="headerlink" title="B. 线性探测结果的比较"></a>B. 线性探测结果的比较</h2><p>​	在§4.3中，我们展示了线性探测准确率和微调准确率在很大程度上是无关的，它们在处理线性可分性方面有不同的侧重点。我们注意到，现有的基于掩蔽的图像编码方法通常在线性探测中不如对比学习等方法具有竞争力。为了完整性，我们在表12中对比了基于掩蔽的方法在线性探测准确率上的表现。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Gavin-rep/Pictures@master/image-20241119212824481.png" alt="image-20241119212824481"></p>
+<p>​	我们的MAE与ViT-L结合，取得了75.8%的线性探测准确率，显著优于以往的掩蔽方法。另一方面，在这一协议下，它仍然落后于对比学习方法：例如，MoCo v3 [9]在ViT-L上的线性探测准确率为77.6%（见图9）。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Gavin-rep/Pictures@master/image-20241119212842990.png" alt="image-20241119212842990"></p>
+<h2 id="C-ImageNet上的鲁棒性估计"><a href="#C-ImageNet上的鲁棒性估计" class="headerlink" title="C. ImageNet上的鲁棒性估计"></a>C. ImageNet上的鲁棒性估计</h2><p>​	在表13中，我们评估了我们模型在不同版本的ImageNet验证集上的鲁棒性。我们使用在原始ImageNet上微调的相同模型（表3），并仅在不同的验证集上进行推理，不进行任何专门的微调。表13显示，我们的方法具有强大的扩展性：增加模型大小带来了显著的提升。增大图像大小对所有验证集都有帮助，除了IN-C。我们的结果大幅超越了之前最佳的（专门化系统的）结果。	相比之下，监督式训练表现明显较差（见表13底部；模型描述见A.2）。例如，使用ViT-H时，我们的MAE预训练在IN-A上比监督训练方法提高了35%（68.2% vs 33.1%）。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Gavin-rep/Pictures@master/image-20241119212954872.png" alt="image-20241119212954872"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://example.com">Gavin</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2024/11/17/%E6%96%87%E7%8C%AE%E9%98%85%E8%AF%BB%EF%BC%9AMasked%20Autoencoders%20Are%20Scalable%20Vision%20Learners%20/">http://example.com/2024/11/17/%E6%96%87%E7%8C%AE%E9%98%85%E8%AF%BB%EF%BC%9AMasked%20Autoencoders%20Are%20Scalable%20Vision%20Learners%20/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">Gavin</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a><a class="post-meta__tags" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/">计算机视觉</a></div><div class="post_share"><div class="social-share" data-image="https://i.ibb.co/gD7cJGh/image.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/11/19/%E6%96%87%E7%8C%AE%E9%98%85%E8%AF%BB%EF%BC%9AMasked%20Autoencoders%20that%20listen/" title="文献阅读: Masked Autoencoders that Listen"><img class="cover" src="https://i.ibb.co/9HZr35S/image.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">文献阅读: Masked Autoencoders that Listen</div></div></a></div><div class="next-post pull-right"><a href="/2024/10/27/%E6%96%87%E7%8C%AE%E9%98%85%E8%AF%BB%20-%20Robustness%20and%20Regularization%20of%20Personal%20Audio%20Systems/" title="文献阅读: Robustness and Regularization of Personal Audio Systems"><img class="cover" src="https://i.ibb.co/c1YpYsm/image.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">文献阅读: Robustness and Regularization of Personal Audio Systems</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/05/06/%20%20%E6%96%87%E7%8C%AE%E9%98%85%E8%AF%BB-%20Real-time%20implementation%20and%20explainable%20AI%20analysis%20of%20delayless%20CNN-based%20selective%20fixed-filter%20active%20noise%20control/" title="文献阅读: Real-time implementation and explainable AI analysis of delayless CNN-based selective fixed-filter active noise control"><img class="cover" src="https://i.ibb.co/rk6B9g0/image.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-05-06</div><div class="title">文献阅读: Real-time implementation and explainable AI analysis of delayless CNN-based selective fixed-filter active noise control</div></div></a></div><div><a href="/2023/10/27/%E6%96%87%E7%8C%AE%E9%98%85%E8%AF%BB%EF%BC%9A%20Deep%20Networks%20for%20Direction-of-Arrival%20Estimation%20in%20Low%20SNR/" title="文献阅读: Deep Networks for Direction-of-Arrival Estimation in Low SNR"><img class="cover" src="https://i.ibb.co/vHV5BKD/image.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-10-27</div><div class="title">文献阅读: Deep Networks for Direction-of-Arrival Estimation in Low SNR</div></div></a></div><div><a href="/2024/05/06/%E6%96%87%E7%8C%AE%E9%98%85%E8%AF%BB%EF%BC%9A%20Transferable%20Latent%20of%20CNN-Based%20Selective%20Fixed-Filter%20Active%20Noise%20Control/" title="文献阅读: Transferable Latent of CNN-Based Selective Fixed-Filter Active Noise Control"><img class="cover" src="https://i.ibb.co/xSTFTsh/image.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-05-06</div><div class="title">文献阅读: Transferable Latent of CNN-Based Selective Fixed-Filter Active Noise Control</div></div></a></div><div><a href="/2024/04/23/%E6%96%87%E7%8C%AE%E9%98%85%E8%AF%BB%EF%BC%9AA%20Hybrid%20SFANC-FxNLMS%20Algorithm%20for%20Active%20Noise%20Control%20based%20on%20Deep%20Learning/" title="文献阅读: A Hybrid SFANC-FxNLMS Algorithm for Active Noise Control based on Deep Learning"><img class="cover" src="https://i.ibb.co/5GmwJBS/image.png	" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-23</div><div class="title">文献阅读: A Hybrid SFANC-FxNLMS Algorithm for Active Noise Control based on Deep Learning</div></div></a></div><div><a href="/2024/05/05/%E6%96%87%E7%8C%AE%E9%98%85%E8%AF%BB%EF%BC%9ADEEP%20GENERATIVE%20FIXED-FILTER%20ACTIVE%20NOISE%20CONTROL/" title="文献阅读: DEEP GENERATIVE FIXED-FILTER ACTIVE NOISE CONTROL"><img class="cover" src="https://i.ibb.co/LSLjfkw/image.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-05-05</div><div class="title">文献阅读: DEEP GENERATIVE FIXED-FILTER ACTIVE NOISE CONTROL</div></div></a></div><div><a href="/2023/10/25/%E6%96%87%E7%8C%AE%E9%98%85%E8%AF%BB%EF%BC%9ADeep%20learning%20assisted%20sound%20source%20localization%20using%20two%20orthogonal%20first-order%20differential%20microphone%20arrays/" title="文献阅读: Deep learning assisted sound source localization using two orthogonal first-order differential microphone arrays"><img class="cover" src="https://i.ibb.co/XVMYNX3/image.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-10-25</div><div class="title">文献阅读: Deep learning assisted sound source localization using two orthogonal first-order differential microphone arrays</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://i.ibb.co/ch2RrDp/20230822001522.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Gavin</div><div class="author-info__description">我的过去常常追赶着我</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">37</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">17</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/alexandergwm"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/alexandergwm" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:wenmiaogao@163.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">May you stay young forever, do the thing in your own zone.</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%95%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">引言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E4%BB%8B%E7%BB%8D"><span class="toc-number">2.</span> <span class="toc-text">1.介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E6%9C%80%E8%BF%91%E5%B7%A5%E4%BD%9C"><span class="toc-number">3.</span> <span class="toc-text">2. 最近工作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E6%96%B9%E6%B3%95"><span class="toc-number">4.</span> <span class="toc-text">3. 方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-ImageNet-%E5%AE%9E%E9%AA%8C"><span class="toc-number">5.</span> <span class="toc-text">4. ImageNet 实验</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-%E4%B8%BB%E8%A6%81%E6%80%A7%E8%B4%A8"><span class="toc-number">5.1.</span> <span class="toc-text">4.1 主要性质</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-%E4%B8%8E%E4%B9%8B%E5%89%8D%E6%96%B9%E6%B3%95%E7%9A%84%E5%AF%B9%E6%AF%94"><span class="toc-number">5.2.</span> <span class="toc-text">4.2 与之前方法的对比</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-%E9%83%A8%E5%88%86%E5%BE%AE%E8%B0%83"><span class="toc-number">5.3.</span> <span class="toc-text">4.3 部分微调</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E8%BF%81%E7%A7%BB%E5%AD%A6%E4%B9%A0%E5%AE%9E%E9%AA%8C"><span class="toc-number">6.</span> <span class="toc-text">5. 迁移学习实验</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E8%AE%A8%E8%AE%BA%E5%92%8C%E7%BB%93%E8%AE%BA"><span class="toc-number">7.</span> <span class="toc-text">6. 讨论和结论</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#A-%E5%AE%9E%E7%8E%B0%E7%BB%86%E8%8A%82"><span class="toc-number">8.</span> <span class="toc-text">A.实现细节</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#A-1-ImageNet-%E5%AE%9E%E9%AA%8C"><span class="toc-number">8.1.</span> <span class="toc-text">A.1 ImageNet 实验</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#A-2-%E4%BB%8E%E5%A4%B4ViT-L-H-%E7%9B%91%E7%9D%A3%E8%AE%AD%E7%BB%83"><span class="toc-number">8.2.</span> <span class="toc-text">A.2 从头ViT-L&#x2F;H 监督训练</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#A-3-COCO%E4%B8%AD%E7%9A%84%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B%E5%92%8C%E5%88%86%E7%A6%BB"><span class="toc-number">8.3.</span> <span class="toc-text">A.3 COCO中的目标检测和分离</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#A-4-ADE20K%E4%B8%AD%E7%9A%84%E8%AF%AD%E6%84%8F%E5%88%86%E5%89%B2"><span class="toc-number">8.4.</span> <span class="toc-text">A.4 ADE20K中的语意分割</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#A-5-%E5%85%B6%E4%BB%96%E7%9A%84%E5%88%86%E7%B1%BB%E4%BB%BB%E5%8A%A1"><span class="toc-number">8.5.</span> <span class="toc-text">A.5 其他的分类任务</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#B-%E7%BA%BF%E6%80%A7%E6%8E%A2%E6%B5%8B%E7%BB%93%E6%9E%9C%E7%9A%84%E6%AF%94%E8%BE%83"><span class="toc-number">9.</span> <span class="toc-text">B. 线性探测结果的比较</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#C-ImageNet%E4%B8%8A%E7%9A%84%E9%B2%81%E6%A3%92%E6%80%A7%E4%BC%B0%E8%AE%A1"><span class="toc-number">10.</span> <span class="toc-text">C. ImageNet上的鲁棒性估计</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/11/19/%E6%96%87%E7%8C%AE%E9%98%85%E8%AF%BB%EF%BC%9AMasked%20Autoencoders%20that%20listen/" title="文献阅读: Masked Autoencoders that Listen"><img src="https://i.ibb.co/9HZr35S/image.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="文献阅读: Masked Autoencoders that Listen"/></a><div class="content"><a class="title" href="/2024/11/19/%E6%96%87%E7%8C%AE%E9%98%85%E8%AF%BB%EF%BC%9AMasked%20Autoencoders%20that%20listen/" title="文献阅读: Masked Autoencoders that Listen">文献阅读: Masked Autoencoders that Listen</a><time datetime="2024-11-19T13:34:57.816Z" title="发表于 2024-11-19 21:34:57">2024-11-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/11/17/%E6%96%87%E7%8C%AE%E9%98%85%E8%AF%BB%EF%BC%9AMasked%20Autoencoders%20Are%20Scalable%20Vision%20Learners%20/" title="文献阅读: Masked Autoencoders Are Scalable Vision Learners"><img src="https://i.ibb.co/gD7cJGh/image.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="文献阅读: Masked Autoencoders Are Scalable Vision Learners"/></a><div class="content"><a class="title" href="/2024/11/17/%E6%96%87%E7%8C%AE%E9%98%85%E8%AF%BB%EF%BC%9AMasked%20Autoencoders%20Are%20Scalable%20Vision%20Learners%20/" title="文献阅读: Masked Autoencoders Are Scalable Vision Learners">文献阅读: Masked Autoencoders Are Scalable Vision Learners</a><time datetime="2024-11-17T12:30:01.804Z" title="发表于 2024-11-17 20:30:01">2024-11-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/10/27/%E6%96%87%E7%8C%AE%E9%98%85%E8%AF%BB%20-%20Robustness%20and%20Regularization%20of%20Personal%20Audio%20Systems/" title="文献阅读: Robustness and Regularization of Personal Audio Systems"><img src="https://i.ibb.co/c1YpYsm/image.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="文献阅读: Robustness and Regularization of Personal Audio Systems"/></a><div class="content"><a class="title" href="/2024/10/27/%E6%96%87%E7%8C%AE%E9%98%85%E8%AF%BB%20-%20Robustness%20and%20Regularization%20of%20Personal%20Audio%20Systems/" title="文献阅读: Robustness and Regularization of Personal Audio Systems">文献阅读: Robustness and Regularization of Personal Audio Systems</a><time datetime="2024-10-27T13:47:25.740Z" title="发表于 2024-10-27 21:47:25">2024-10-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/08/25/%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93%EF%BC%9A%E4%B8%8D%E5%90%8C%E7%9A%84dB/" title="知识总结：不同的dB"><img src="https://i.ibb.co/wBsWFc5/image.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="知识总结：不同的dB"/></a><div class="content"><a class="title" href="/2024/08/25/%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93%EF%BC%9A%E4%B8%8D%E5%90%8C%E7%9A%84dB/" title="知识总结：不同的dB">知识总结：不同的dB</a><time datetime="2024-08-25T08:12:47.278Z" title="发表于 2024-08-25 16:12:47">2024-08-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/08/15/%E6%96%87%E7%8C%AE%E9%98%85%E8%AF%BB%EF%BC%9ADeep%20root%20music%20algorithm%20for%20data-driven%20DoA%20estimation/" title="文献阅读: SubspaceNet: Deep root music algorithm for data-driven DoA estimation"><img src="https://i.ibb.co/8xsnM1g/image.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="文献阅读: SubspaceNet: Deep root music algorithm for data-driven DoA estimation"/></a><div class="content"><a class="title" href="/2024/08/15/%E6%96%87%E7%8C%AE%E9%98%85%E8%AF%BB%EF%BC%9ADeep%20root%20music%20algorithm%20for%20data-driven%20DoA%20estimation/" title="文献阅读: SubspaceNet: Deep root music algorithm for data-driven DoA estimation">文献阅读: SubspaceNet: Deep root music algorithm for data-driven DoA estimation</a><time datetime="2024-08-15T13:06:33.318Z" title="发表于 2024-08-15 21:06:33">2024-08-15</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By Gavin</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Have a nice day!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, '']
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css"><script src="https://cdn.jsdelivr.net/npm/katex/dist/contrib/copy-tex.min.js"></script><script>(() => {
+  document.querySelectorAll('#article-container span.katex-display').forEach(item => {
+    btf.wrap(item, 'div', { class: 'katex-wrap'})
+  })
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
