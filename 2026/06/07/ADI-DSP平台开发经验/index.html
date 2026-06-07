@@ -1,13 +1,13 @@
-<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>ADI-DSP平台开发经验 | Gavin</title><meta name="author" content="Gavin"><meta name="copyright" content="Gavin"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="目录 背景与问题 序言：开发流程与角色分工 工具 DSP 开发入门 DSP 开发提升 回顾与总结   背景与问题背景 需求转变：从纯技术预研走向工程化量产，核心任务是将算法原型真正部署到硬件上。 思维转变： MATLAB 思维：先跑通、再验证，关注算法逻辑本身。 DSP 工程思维：强调代码规范、可读性与协作效率。    核心问题   维度 问题描述    核心目标 将 MATLAB 算法部署到 D">
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>ADI-DSP平台开发经验 | Gavin</title><meta name="author" content="Gavin"><meta name="copyright" content="Gavin"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="前言本书面向即将从事 ADI DSP 开发的初学者，尤其适用于具备 MATLAB 算法背景、但尚未系统接触过嵌入式 C 与硬件开发的工程师。 学习 DSP 开发，本质上是在学习三件事：如何把算法写成能在芯片上运行的 C 代码、如何理解芯片的硬件约束、如何在资源有限的条件下满足实时性与稳定性要求。三者缺一不可，但不必同时起步——建议先跑通功能，再对齐精度，最后优化性能。 阅读建议：  第一至二章建立">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ADI-DSP平台开发经验">
 <meta property="og:url" content="http://example.com/2026/06/07/ADI-DSP%E5%B9%B3%E5%8F%B0%E5%BC%80%E5%8F%91%E7%BB%8F%E9%AA%8C/index.html">
 <meta property="og:site_name" content="Gavin">
-<meta property="og:description" content="目录 背景与问题 序言：开发流程与角色分工 工具 DSP 开发入门 DSP 开发提升 回顾与总结   背景与问题背景 需求转变：从纯技术预研走向工程化量产，核心任务是将算法原型真正部署到硬件上。 思维转变： MATLAB 思维：先跑通、再验证，关注算法逻辑本身。 DSP 工程思维：强调代码规范、可读性与协作效率。    核心问题   维度 问题描述    核心目标 将 MATLAB 算法部署到 D">
+<meta property="og:description" content="前言本书面向即将从事 ADI DSP 开发的初学者，尤其适用于具备 MATLAB 算法背景、但尚未系统接触过嵌入式 C 与硬件开发的工程师。 学习 DSP 开发，本质上是在学习三件事：如何把算法写成能在芯片上运行的 C 代码、如何理解芯片的硬件约束、如何在资源有限的条件下满足实时性与稳定性要求。三者缺一不可，但不必同时起步——建议先跑通功能，再对齐精度，最后优化性能。 阅读建议：  第一至二章建立">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://i.ibb.co/0fP2mb0/image.jpg">
 <meta property="article:published_time" content="2026-06-07T02:30:00.000Z">
-<meta property="article:modified_time" content="2026-06-07T04:01:09.749Z">
+<meta property="article:modified_time" content="2026-06-07T04:06:01.331Z">
 <meta property="article:author" content="Gavin">
 <meta property="article:tag" content="声学">
 <meta property="article:tag" content="DSP">
@@ -61,7 +61,7 @@
   isHome: false,
   isHighlightShrink: false,
   isToc: true,
-  postUpdate: '2026-06-07 12:01:09'
+  postUpdate: '2026-06-07 12:06:01'
 }</script><noscript><style type="text/css">
   #nav {
     opacity: 1
@@ -169,146 +169,155 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
-<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://i.ibb.co/0fP2mb0/image.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">3</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">6</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://i.ibb.co/B34vT9d/3d3adc2b8b0bc8df9c443de92a7bc0a.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="Gavin"><img class="site-icon" src="https://i.ibb.co/3BGBwps/2c8b98a62fbc3615.png"/><span class="site-name">Gavin</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">ADI-DSP平台开发经验</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-06-07T02:30:00.000Z" title="发表于 2026-06-07 10:30:00">2026-06-07</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-06-07T04:01:09.749Z" title="更新于 2026-06-07 12:01:09">2026-06-07</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93/">知识总结</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="ADI-DSP平台开发经验"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ol>
-<li><a href="#%E8%83%8C%E6%99%AF%E4%B8%8E%E9%97%AE%E9%A2%98">背景与问题</a></li>
-<li><a href="#%E5%BA%8F%E8%A8%80%E5%BC%80%E5%8F%91%E6%B5%81%E7%A8%8B%E4%B8%8E%E8%A7%92%E8%89%B2%E5%88%86%E5%B7%A5">序言：开发流程与角色分工</a></li>
-<li><a href="#%E5%B7%A5%E5%85%B7">工具</a></li>
-<li><a href="#dsp-%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8">DSP 开发入门</a></li>
-<li><a href="#dsp-%E5%BC%80%E5%8F%91%E6%8F%90%E5%8D%87">DSP 开发提升</a></li>
-<li><a href="#%E5%9B%9E%E9%A1%BE%E4%B8%8E%E6%80%BB%E7%BB%93">回顾与总结</a></li>
-</ol>
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://i.ibb.co/0fP2mb0/image.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">3</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">6</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://i.ibb.co/B34vT9d/3d3adc2b8b0bc8df9c443de92a7bc0a.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="Gavin"><img class="site-icon" src="https://i.ibb.co/3BGBwps/2c8b98a62fbc3615.png"/><span class="site-name">Gavin</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">ADI-DSP平台开发经验</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-06-07T02:30:00.000Z" title="发表于 2026-06-07 10:30:00">2026-06-07</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-06-07T04:06:01.331Z" title="更新于 2026-06-07 12:06:01">2026-06-07</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93/">知识总结</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="ADI-DSP平台开发经验"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本书面向即将从事 ADI DSP 开发的初学者，尤其适用于具备 MATLAB 算法背景、但尚未系统接触过嵌入式 C 与硬件开发的工程师。</p>
+<p>学习 DSP 开发，本质上是在学习三件事：<strong>如何把算法写成能在芯片上运行的 C 代码</strong>、<strong>如何理解芯片的硬件约束</strong>、<strong>如何在资源有限的条件下满足实时性与稳定性要求</strong>。三者缺一不可，但不必同时起步——建议先跑通功能，再对齐精度，最后优化性能。</p>
+<p><strong>阅读建议</strong>：</p>
+<ul>
+<li>第一至二章建立整体认知，了解验证流程与学习顺序；</li>
+<li>第三章掌握日常开发工具；</li>
+<li>第四章是硬件基础，建议反复查阅；</li>
+<li>第五章面向实际项目中的规范与架构问题。</li>
+</ul>
+<p>文中代码均基于 ADI SHARC+ 平台（CCES 工具链），其他 DSP 厂商的思路相通，具体语法需对照对应手册。</p>
 <hr>
-<h2 id="背景与问题"><a href="#背景与问题" class="headerlink" title="背景与问题"></a>背景与问题</h2><h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><ul>
-<li><strong>需求转变</strong>：从纯技术预研走向工程化量产，核心任务是将算法原型真正部署到硬件上。</li>
-<li><strong>思维转变</strong>：<ul>
-<li><strong>MATLAB 思维</strong>：先跑通、再验证，关注算法逻辑本身。</li>
-<li><strong>DSP 工程思维</strong>：强调代码规范、可读性与协作效率。</li>
-</ul>
-</li>
-</ul>
-<h3 id="核心问题"><a href="#核心问题" class="headerlink" title="核心问题"></a>核心问题</h3><table>
+<h2 id="第一章-建立整体认识"><a href="#第一章-建立整体认识" class="headerlink" title="第一章 建立整体认识"></a>第一章 建立整体认识</h2><h3 id="1-1-MATLAB-与-DSP-开发的思维差异"><a href="#1-1-MATLAB-与-DSP-开发的思维差异" class="headerlink" title="1.1 MATLAB 与 DSP 开发的思维差异"></a>1.1 MATLAB 与 DSP 开发的思维差异</h3><p>在 MATLAB 中，我们关心的是算法是否正确、指标是否达标。内存由系统自动管理，浮点运算为默认精度，一行 <code>fft(x)</code> 即可完成复杂的频域变换。这种开发方式非常适合算法研究与快速验证。</p>
+<p>DSP 开发则运行在真实的处理器上，必须面对以下现实：</p>
+<table>
 <thead>
 <tr>
 <th>维度</th>
-<th>问题描述</th>
+<th>MATLAB 环境</th>
+<th>DSP 嵌入式环境</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>核心目标</td>
-<td>将 MATLAB 算法部署到 DSP 开发板，系统稳定、可交互、功能达标、支持迭代升级</td>
+<td>执行方式</td>
+<td>解释执行，逐行运行</td>
+<td>编译为机器码，需考虑指令周期</td>
 </tr>
 <tr>
-<td>模型转化</td>
-<td>如何把 MATLAB 模型转化为优雅、整洁、规范的 C 代码</td>
+<td>内存</td>
+<td>自动分配与释放</td>
+<td>手动规划栈、片内 RAM、片外存储</td>
 </tr>
 <tr>
-<td>团队协作</td>
-<td>算法、嵌入式、硬件、测试多角色如何高效沟通</td>
+<td>数值精度</td>
+<td>默认双精度浮点</td>
+<td>需选择定点（Q 格式）或单精度浮点</td>
 </tr>
 <tr>
-<td>学习挑战</td>
-<td>无 C&#x2F;嵌入式背景时，面对繁杂任务不知从何入手</td>
+<td>调试手段</td>
+<td>直接绘图、查看变量</td>
+<td>断点、串口日志、与 MATLAB 对比</td>
+</tr>
+<tr>
+<td>性能关注</td>
+<td>通常不敏感</td>
+<td>实时性为核心约束</td>
 </tr>
 </tbody></table>
-<h3 id="问题导向"><a href="#问题导向" class="headerlink" title="问题导向"></a>问题导向</h3><p>展开思路可用 <strong>What &#x2F; Why &#x2F; How</strong> 框架，并区分「应当掌握」与「应当了解」：</p>
-<ul>
-<li>学习 DSP 需要哪些知识？</li>
-<li>如何高效学习 DSP 开发？</li>
-<li>为什么要重视代码规范？</li>
-<li>为什么要建立体系思维？</li>
-</ul>
-<h3 id="算法工程师的学习路径"><a href="#算法工程师的学习路径" class="headerlink" title="算法工程师的学习路径"></a>算法工程师的学习路径</h3><p>从 MATLAB 到 DSP 落地，建议按以下顺序逐步深入，避免一开始就陷入寄存器细节：</p>
+<p>因此，从 MATLAB 转向 DSP，不是简单地「翻译语法」，而是<strong>在保持算法逻辑不变的前提下，重新适应硬件的执行模型</strong>。初学者最常见的误区是：MATLAB 能跑通，就认为 C 代码也该差不多——实际上，类型转换、内存布局和定点溢出都可能导致结果完全错误。</p>
+<h3 id="1-2-初学者面临的典型困难"><a href="#1-2-初学者面临的典型困难" class="headerlink" title="1.2 初学者面临的典型困难"></a>1.2 初学者面临的典型困难</h3><p>进入 DSP 开发后，你通常会碰到以下几类问题：</p>
+<ol>
+<li><strong>模型转化</strong>：如何把 MATLAB 函数写成结构清晰、可维护的 C 代码？</li>
+<li><strong>数值对齐</strong>：C 代码的输出为何与 MATLAB 存在偏差？如何判断偏差是否可接受？</li>
+<li><strong>资源约束</strong>：缓冲区该放片内还是片外？栈空间不够时程序为何崩溃？</li>
+<li><strong>实时性</strong>：算法能否在规定的帧时间内完成？瓶颈在哪里？</li>
+<li><strong>协作沟通</strong>：如何与硬件、嵌入式、测试同事有效对接？</li>
+</ol>
+<p>这些问题没有捷径，需要按阶段逐步解决。本章最后一节给出推荐的学习顺序。</p>
+<h3 id="1-3-推荐学习路径"><a href="#1-3-推荐学习路径" class="headerlink" title="1.3 推荐学习路径"></a>1.3 推荐学习路径</h3><p>建议按以下五个阶段循序渐进，每个阶段都设置明确的验收标准：</p>
 <table>
 <thead>
 <tr>
 <th>阶段</th>
-<th>目标</th>
-<th>关键动作</th>
+<th>学习目标</th>
+<th>验收标准示例</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>1. 算法翻译</td>
-<td>把 MATLAB 核心逻辑写成可编译的 C</td>
-<td>从 FIR、能量计算等短算法入手，逐行对比输出</td>
+<td>第一阶段：算法翻译</td>
+<td>将 MATLAB 核心逻辑写成可编译的 C</td>
+<td>浮点版 C 代码编译通过，逻辑与 MATLAB 一致</td>
 </tr>
 <tr>
-<td>2. 数值对齐</td>
-<td>确认浮点&#x2F;定点结果与 MATLAB 一致</td>
-<td>记录最大误差、溢出点，明确 Q 格式与缩放因子</td>
+<td>第二阶段：数值对齐</td>
+<td>确认定点&#x2F;浮点结果在容限内</td>
+<td>最大误差、SNR 损失满足指标要求</td>
 </tr>
 <tr>
-<td>3. 内存与接口</td>
-<td>弄清数据放哪、怎么进出</td>
-<td>画数据流图，标注缓冲区大小与采样率约束</td>
+<td>第三阶段：内存与接口</td>
+<td>明确数据存放位置与进出路径</td>
+<td>完成数据流图，缓冲区大小已估算</td>
 </tr>
 <tr>
-<td>4. 性能优化</td>
-<td>满足实时性指标</td>
-<td>用 cycle 统计定位热点，再考虑 SIMD、DMA、加速器</td>
+<td>第四阶段：性能优化</td>
+<td>满足帧时延与算力预算</td>
+<td>cycle 统计达标，热点函数已优化</td>
 </tr>
 <tr>
-<td>5. 工程化</td>
-<td>可维护、可协作、可量产</td>
-<td>接入 Git、静态分析、规范命名与模块拆分</td>
+<td>第五阶段：工程化</td>
+<td>代码可维护、模块边界清晰</td>
+<td>通过静态分析，命名与注释符合规范</td>
 </tr>
 </tbody></table>
-<p>每一步都应有可量化的验收标准，例如「1024 点 FFT 在目标 DSP 上耗时 &lt; X ms」「与 MATLAB 相比 SNR 损失 &lt; Y dB」。</p>
+<p><strong>学习原则</strong>：用到什么学什么，以项目驱动代替空泛阅读。先让代码在板子上跑起来，再逐项打磨精度与性能。</p>
+<h3 id="本章小结"><a href="#本章小结" class="headerlink" title="本章小结"></a>本章小结</h3><p>DSP 开发是在硬件约束下实现算法落地的工程活动。初学者应首先建立「MATLAB 思维」与「嵌入式思维」的差异意识，再按翻译 → 对齐 → 内存 → 性能 → 规范的路径逐步深入。</p>
 <hr>
-<h2 id="序言：开发流程与角色分工"><a href="#序言：开发流程与角色分工" class="headerlink" title="序言：开发流程与角色分工"></a>序言：开发流程与角色分工</h2><h3 id="算法开发流程"><a href="#算法开发流程" class="headerlink" title="算法开发流程"></a>算法开发流程</h3><p>嵌入式算法验证通常经历四个阶段：</p>
-<h4 id="1-模型在环-MIL（Model-in-the-Loop）"><a href="#1-模型在环-MIL（Model-in-the-Loop）" class="headerlink" title="1. 模型在环 MIL（Model-in-the-Loop）"></a>1. 模型在环 MIL（Model-in-the-Loop）</h4><p>完全基于 MATLAB&#x2F;Simulink 构建纯算法抽象模型，与虚拟应用环境形成仿真闭环，全程不涉及实际代码和硬件，仅验证算法行为。</p>
-<p><strong>目的</strong>：以极低成本在早期验证算法逻辑正确性、功能完整性和性能达标性。</p>
-<h4 id="2-算法在环-AIL（Algorithm-in-the-Loop）"><a href="#2-算法在环-AIL（Algorithm-in-the-Loop）" class="headerlink" title="2. 算法在环 AIL（Algorithm-in-the-Loop）"></a>2. 算法在环 AIL（Algorithm-in-the-Loop）</h4><p>将 MATLAB 算法转换为目标平台 C 语言，嵌入真实处理器平台，用与 MATLAB 一致的数据和逻辑驱动算法形成闭环，无真实传感器参与，<strong>仅验证代码运行逻辑</strong>。</p>
-<p><strong>目的</strong>：验证部署的 C 代码与原始 MATLAB 模型的功能一致性，在无硬件条件下过滤代码错误。</p>
-<h4 id="3-硬件在环-HIL（Hardware-in-the-Loop）"><a href="#3-硬件在环-HIL（Hardware-in-the-Loop）" class="headerlink" title="3. 硬件在环 HIL（Hardware-in-the-Loop）"></a>3. 硬件在环 HIL（Hardware-in-the-Loop）</h4><p>将烧录了实际算法代码的真实硬件（DSP&#x2F;开发板）接入虚拟传感设备（声卡等），以真实硬件为核心、虚拟环境模拟外部工况。</p>
-<p><strong>目的</strong>：验证代码在真实硬件上的实时性、稳定性、硬件接口适配性及场景交互正确性。</p>
-<h4 id="4-算法部署"><a href="#4-算法部署" class="headerlink" title="4. 算法部署"></a>4. 算法部署</h4><ul>
-<li><strong>实验室</strong>：在可控、可复现环境中验证功能正确性、性能达标性及硬件适配稳定性。</li>
-<li><strong>真实工况</strong>：在实际复杂现场验证鲁棒性与实用性，是对算法效果的最终检验。</li>
-</ul>
-<p>四个阶段并非严格线性，实际项目中常出现「HIL 发现问题 → 回退修改 C 代码 → 再跑 AIL 对比」的迭代。关键是每个阶段有明确的<strong>输入、输出与通过准则</strong>：</p>
-<table>
+<h2 id="第二章-算法验证与团队协作"><a href="#第二章-算法验证与团队协作" class="headerlink" title="第二章 算法验证与团队协作"></a>第二章 算法验证与团队协作</h2><h3 id="2-1-嵌入式算法的四级验证"><a href="#2-1-嵌入式算法的四级验证" class="headerlink" title="2.1 嵌入式算法的四级验证"></a>2.1 嵌入式算法的四级验证</h3><p>将算法部署到 DSP，通常需要经过四个验证阶段。理解每一阶段的目的，有助于你知道「当前该做什么」以及「怎样才算通过」。</p>
+<p><strong>模型在环（MIL，Model-in-the-Loop）</strong></p>
+<p>在 MATLAB&#x2F;Simulink 中构建纯算法模型，用仿真数据驱动，验证算法逻辑与功能指标。此阶段不涉及 C 代码和真实硬件，成本最低，应尽可能在早期发现算法设计层面的问题。</p>
+<p><strong>算法在环（AIL，Algorithm-in-the-Loop）</strong></p>
+<p>将 MATLAB 算法转换为 C 语言，在处理器或仿真环境中运行，用与 MATLAB 相同的输入数据驱动，对比输出结果。此阶段验证的是<strong>代码实现的正确性</strong>，包括类型转换、循环逻辑、边界条件等。</p>
+<p><strong>硬件在环（HIL，Hardware-in-the-Loop）</strong></p>
+<p>将烧录了固件的真实 DSP 开发板接入测试环境（如声卡模拟传感器信号），验证算法在真实硬件上的实时性、稳定性与外设交互是否正确。</p>
+<p><strong>现场部署</strong></p>
+<p>在实验室可控环境中做最终确认后，进入真实应用场景验证鲁棒性。这是对算法效果的终极检验。</p>
+<p>四个阶段并非严格单向推进。实践中经常出现「HIL 暴露问题 → 修改 C 代码 → 重新跑 AIL 对比」的迭代，这属于正常流程。</p>
+<h3 id="2-2-各阶段的输入、输出与通过准则"><a href="#2-2-各阶段的输入、输出与通过准则" class="headerlink" title="2.2 各阶段的输入、输出与通过准则"></a>2.2 各阶段的输入、输出与通过准则</h3><table>
 <thead>
 <tr>
 <th>阶段</th>
-<th>典型输入</th>
-<th>典型输出</th>
-<th>通过准则示例</th>
+<th>输入</th>
+<th>输出</th>
+<th>通过准则</th>
 </tr>
 </thead>
 <tbody><tr>
 <td>MIL</td>
-<td>算法需求、仿真数据</td>
-<td>Simulink&#x2F;MATLAB 模型、仿真报告</td>
-<td>功能逻辑正确、指标在模型层达标</td>
+<td>算法需求、仿真数据集</td>
+<td>MATLAB 模型、仿真报告</td>
+<td>功能逻辑正确，指标在模型层达标</td>
 </tr>
 <tr>
 <td>AIL</td>
-<td>MATLAB 黄金数据、C 源码</td>
-<td>PC&#x2F;仿真器可执行程序、对比报告</td>
+<td>黄金数据、C 源码</td>
+<td>可执行程序、对比报告</td>
 <td>C 输出与 MATLAB 误差在容限内</td>
 </tr>
 <tr>
 <td>HIL</td>
-<td>烧录固件、虚拟激励</td>
-<td>实时日志、波形、延迟测量</td>
-<td>单帧处理时延、无崩溃、接口正常</td>
+<td>烧录固件、激励信号</td>
+<td>实时日志、波形、时延数据</td>
+<td>单帧时延达标，无崩溃，接口正常</td>
 </tr>
 <tr>
 <td>部署</td>
 <td>完整系统</td>
 <td>量产固件、维护文档</td>
-<td>现场工况下稳定运行 N 小时</td>
+<td>现场稳定运行达到规定时长</td>
 </tr>
 </tbody></table>
-<p><strong>算法文档</strong>是贯穿各阶段的纽带，建议至少包含：算法原理简述、输入&#x2F;输出接口（数据类型、长度、采样率）、性能指标（延迟、算力、内存）、已知限制与异常处理策略。嵌入式和测试工程师依赖这份文档对接，而不是反复口头沟通。</p>
-<h3 id="DSP-开发中的角色分工"><a href="#DSP-开发中的角色分工" class="headerlink" title="DSP 开发中的角色分工"></a>DSP 开发中的角色分工</h3><h4 id="Why：为何需要分工"><a href="#Why：为何需要分工" class="headerlink" title="Why：为何需要分工"></a>Why：为何需要分工</h4><ol>
-<li><strong>保证产品质量</strong>：各阶段由专家负责，满足设计指标。</li>
-<li><strong>提升开发效率</strong>：避免跨领域重复劳动。</li>
-<li><strong>降低项目风险</strong>：问题可精准定位到责任角色。</li>
-<li><strong>优化协作流程</strong>：明确各角色输入输出，减少信息不对称。</li>
-<li><strong>技术沉淀与复用</strong>：经验形成标准化文档，供后续项目参考。</li>
-</ol>
-<h4 id="How：各角色职责"><a href="#How：各角色职责" class="headerlink" title="How：各角色职责"></a>How：各角色职责</h4><table>
+<h3 id="2-3-算法文档应包含的内容"><a href="#2-3-算法文档应包含的内容" class="headerlink" title="2.3 算法文档应包含的内容"></a>2.3 算法文档应包含的内容</h3><p>贯穿各阶段的纽带是一份清晰的<strong>算法文档</strong>。建议至少写明：</p>
+<ul>
+<li>算法原理的简要说明；</li>
+<li>输入&#x2F;输出接口：数据类型、数组长度、采样率；</li>
+<li>性能指标：单帧时延、内存占用、精度要求；</li>
+<li>已知限制与异常处理策略。</li>
+</ul>
+<p>嵌入式和测试工程师依据这份文档完成对接，可减少反复口头沟通带来的误解。</p>
+<h3 id="2-4-团队角色与算法工程师的边界"><a href="#2-4-团队角色与算法工程师的边界" class="headerlink" title="2.4 团队角色与算法工程师的边界"></a>2.4 团队角色与算法工程师的边界</h3><p>DSP 项目通常涉及多角色协作：</p>
+<table>
 <thead>
 <tr>
 <th>角色</th>
@@ -316,154 +325,146 @@
 </tr>
 </thead>
 <tbody><tr>
-<td><strong>算法工程师</strong></td>
-<td>建模与仿真、精度预评估、输出算法文档、协同解决移植问题</td>
+<td>算法工程师</td>
+<td>建模仿真、C 代码移植、精度验证、算法文档</td>
 </tr>
 <tr>
-<td><strong>硬件工程师</strong></td>
-<td>原理图设计、PCB 布局（EMC&#x2F;EMI）、硬件调试、软硬件兼容性</td>
+<td>硬件工程师</td>
+<td>原理图、PCB、EMC&#x2F;EMI、硬件调试</td>
 </tr>
 <tr>
-<td><strong>嵌入式工程师</strong></td>
-<td>外设驱动开发、BSP 构建、协同调试精度与功耗问题</td>
+<td>嵌入式工程师</td>
+<td>外设驱动、BSP、算法与硬件的联调</td>
 </tr>
 <tr>
-<td><strong>测试工程师</strong></td>
-<td>单元&#x2F;性能&#x2F;精度测试、场景验证、测试报告与验收</td>
+<td>测试工程师</td>
+<td>功能&#x2F;性能&#x2F;精度测试、场景验证、验收报告</td>
 </tr>
 <tr>
-<td><strong>项目工程师</strong></td>
-<td>计划制定、跨角色协调、风险管控、文档管理</td>
+<td>项目工程师</td>
+<td>计划、协调、风险管控</td>
 </tr>
 </tbody></table>
-<p><strong>算法工程师应明确</strong>：自己该做什么（执行）、该了解什么（关注）、不必聚焦什么（边界）。将精力集中在核心算法指标落地，对外围指标合理妥协。</p>
-<hr>
-<h2 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h2><h3 id="C-语言（掌握）"><a href="#C-语言（掌握）" class="headerlink" title="C 语言（掌握）"></a>C 语言（掌握）</h3><h4 id="What"><a href="#What" class="headerlink" title="What"></a>What</h4><p>C 语言是面向过程的中间层语言，兼具高级语言可读性与底层硬件操控能力，是「高层逻辑」与「底层硬件」之间的关键桥梁。</p>
-<h4 id="Why"><a href="#Why" class="headerlink" title="Why"></a>Why</h4><ul>
-<li><strong>平衡开发与执行效率</strong>：开发效率比汇编高 10 倍以上，优化后可达汇编 90% 以上执行效率。</li>
-<li><strong>适配 DSP 硬件特性</strong>：指针可直接访问寄存器与内存地址，精确控制定点运算、中断管理等底层资源。</li>
+<p>作为算法工程师，需要明确三件事：</p>
+<ul>
+<li><strong>执行</strong>：建模、移植、精度验证、性能优化；</li>
+<li><strong>关注</strong>：硬件规格、内存容量、外设接口、实时约束；</li>
+<li><strong>边界</strong>：不必深入 PCB 布局或驱动开发的全部细节，但应能读懂规格书、提出明确的接口需求。</li>
 </ul>
-<h4 id="How：从-MATLAB-转向-C"><a href="#How：从-MATLAB-转向-C" class="headerlink" title="How：从 MATLAB 转向 C"></a>How：从 MATLAB 转向 C</h4><p>以「算法翻译」为核心，用熟悉的 MATLAB 代码作为蓝图，逐行翻译为 DSP 兼容的 C 代码：</p>
+<p>将精力集中在核心算法指标的落地上，对外围指标在合理范围内妥协。</p>
+<h3 id="本章小结-1"><a href="#本章小结-1" class="headerlink" title="本章小结"></a>本章小结</h3><p>四级验证（MIL → AIL → HIL → 部署）构成算法落地的标准路径。初学者应重点掌握 AIL 阶段的数值对比方法，并养成编写算法文档的习惯。</p>
+<hr>
+<h2 id="第三章-开发工具"><a href="#第三章-开发工具" class="headerlink" title="第三章 开发工具"></a>第三章 开发工具</h2><h3 id="3-1-C-语言：算法落地的语言基础"><a href="#3-1-C-语言：算法落地的语言基础" class="headerlink" title="3.1 C 语言：算法落地的语言基础"></a>3.1 C 语言：算法落地的语言基础</h3><h4 id="3-1-1-为何选择-C-语言"><a href="#3-1-1-为何选择-C-语言" class="headerlink" title="3.1.1 为何选择 C 语言"></a>3.1.1 为何选择 C 语言</h4><p>C 语言是面向过程的中间层语言：比汇编更易开发与调试，比 Python&#x2F;MATLAB 更接近硬件。编译后的代码执行效率高，优化后可达手写汇编 90% 以上的性能。通过指针可直接访问寄存器与内存地址，适合控制定点运算、中断响应等底层行为。</p>
+<p>ADI 提供的是<strong>扩展 C</strong>，在标准 ANSI C 基础上针对 DSP 的哈佛架构、定点类型和内存布局做了适配。开发时需注意区分标准 C 函数与 ADI 库函数（如 <code>memcpy</code>、<code>sqrt</code> 的 DSP 版本）。</p>
+<h4 id="3-1-2-从-MATLAB-到-C-的翻译方法"><a href="#3-1-2-从-MATLAB-到-C-的翻译方法" class="headerlink" title="3.1.2 从 MATLAB 到 C 的翻译方法"></a>3.1.2 从 MATLAB 到 C 的翻译方法</h4><p>推荐以「算法翻译」为切入点：把熟悉的 MATLAB 代码当作蓝图，逐行改写成 DSP 兼容的 C 代码，然后用 MATLAB 导出的黄金数据做对比验证。</p>
+<p><strong>翻译步骤</strong>：</p>
 <ol>
-<li><strong>实操</strong>：从简单算法入手，对比 C 与 MATLAB 结果验证精度。</li>
-<li><strong>聚焦必要特性</strong>：定宽整型、循环&#x2F;分支、一维数组、指针、函数封装、循环展开、SIMD 指令。</li>
-<li><strong>借助 CCES</strong>：软件仿真对比 MATLAB，硬件调试验证适配。</li>
-<li><strong>复用 ADI 官方库</strong>：参考 FFT、滤波等库的编码风格与定点优化。</li>
+<li>从简单算法入手（如向量点积、FIR 滤波），先写浮点版验证逻辑；</li>
+<li>确认结果正确后，再改为定点实现；</li>
+<li>检查数组对齐，开启编译器优化；</li>
+<li>优先调用 ADI 官方库（FFT、滤波等），参考其定点处理方式。</li>
 </ol>
-<h4 id="MATLAB-与-C-的五大差异"><a href="#MATLAB-与-C-的五大差异" class="headerlink" title="MATLAB 与 C 的五大差异"></a>MATLAB 与 C 的五大差异</h4><table>
+<p><strong>MATLAB 与 C 的五个关键差异</strong>：</p>
+<table>
 <thead>
 <tr>
 <th>维度</th>
 <th>MATLAB</th>
-<th>C 语言（DSP）</th>
+<th>C（DSP）</th>
 </tr>
 </thead>
 <tbody><tr>
 <td>运行机制</td>
-<td>解释型，屏蔽硬件细节</td>
-<td>编译型，需适配指令集与寄存器架构</td>
+<td>解释型</td>
+<td>编译型，需适配目标指令集</td>
 </tr>
 <tr>
 <td>内存管理</td>
-<td>自动托管</td>
-<td>手动控制栈&#x2F;堆&#x2F;片内&#x2F;片外，须防泄漏与越界</td>
+<td>自动</td>
+<td>手动，须防泄漏与越界</td>
 </tr>
 <tr>
 <td>数值计算</td>
-<td>默认双精度浮点</td>
-<td>须适配定点（Q31&#x2F;Q15）或单精度浮点</td>
+<td>双精度浮点默认</td>
+<td>须选定 Q 格式或浮点精度</td>
 </tr>
 <tr>
 <td>抽象层级</td>
-<td>高阶封装（<code>fft()</code>、<code>filter()</code>）</td>
-<td>须手动实现，结合 DMA、中断等硬件特性</td>
+<td>内置 <code>fft()</code>、<code>filter()</code></td>
+<td>需手动实现或调用库函数</td>
 </tr>
 <tr>
 <td>异常处理</td>
-<td>自动容错</td>
-<td>须显式处理除零、空指针、定点溢出</td>
+<td>自动报错</td>
+<td>须显式处理溢出、除零、空指针</td>
 </tr>
 </tbody></table>
-<blockquote>
-<p>注意区分标准 C 与 DSP 厂家提供的扩展 C。</p>
-</blockquote>
-<h4 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h4><ul>
-<li><strong>整型</strong>：DSP 开发的底层基石，优先使用 <code>uint16_t</code>&#x2F;<code>int32_t</code> 等定宽整型。</li>
-<li><strong>定点型</strong>：信号处理专属类型，通过 Q 格式映射小数，硬件只接受定点（整型）数据。</li>
-<li><strong>浮点型</strong>：仅适用于带 FPU 的高性能 DSP；低性能 DSP 软件模拟浮点消耗大量 cycle。</li>
-</ul>
-<p><strong>要点</strong>：</p>
+<h4 id="3-1-3-数据类型"><a href="#3-1-3-数据类型" class="headerlink" title="3.1.3 数据类型"></a>3.1.3 数据类型</h4><p><strong>整型</strong>是 DSP 开发的基石。应优先使用 <code>uint16_t</code>、<code>int32_t</code> 等定宽整型，避免不同编译器下 <code>int</code> 位宽不一致的问题。</p>
+<p><strong>定点型</strong>通过 Q 格式将小数映射为整型。以 Q31 为例（用 <code>int32_t</code> 存储）：</p>
 <ul>
-<li>避免浮点与定点隐式混合运算。</li>
-<li>数据以二进制存储，显示默认十六进制。</li>
-<li>相同内存内容，不同数据类型表示的信息不同。</li>
-<li>单精度浮点加 <code>F</code> 后缀，消除歧义。</li>
+<li>表示范围约 $[-1, +1)$</li>
+<li>分辨率约 $2^{-31}$</li>
+<li>两个 Q31 相乘得 Q62，须右移 31 位并做饱和处理</li>
 </ul>
-<h4 id="定点数与-Q-格式"><a href="#定点数与-Q-格式" class="headerlink" title="定点数与 Q 格式"></a>定点数与 Q 格式</h4><p>许多 ADI DSP 以定点运算为主。Q 格式把一个小数映射为整型存储：$Q_n$ 表示小数点后有 $n$ 位，符号位占 1 位。</p>
-<p>以 <strong>Q31</strong> 为例（<code>int32_t</code> 表示）：</p>
-<ul>
-<li>可表示范围约为 $[-1, +1)$（严格说最大值略小于 1）</li>
-<li>分辨率约为 $2^{-31}$</li>
-<li>两个 Q31 相乘得到 Q62，通常需右移 31 位回到 Q31，并检查是否溢出</li>
-</ul>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// MATLAB: y = 0.5 * x + 0.25</span></span><br><span class="line"><span class="comment">// C 定点实现（Q31）</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdint.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> Q31_SHIFT 31</span></span><br><span class="line"></span><br><span class="line"><span class="type">int32_t</span> <span class="title function_">fir_scale_q31</span><span class="params">(<span class="type">int32_t</span> x)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int64_t</span> acc = (<span class="type">int64_t</span>)x * <span class="number">0x40000000</span>LL;  <span class="comment">// 0.5 in Q31</span></span><br><span class="line">    acc += <span class="number">0x20000000</span>LL;                       <span class="comment">// 0.25 in Q31</span></span><br><span class="line">    <span class="comment">// 右移并饱和处理</span></span><br><span class="line">    <span class="keyword">if</span> (acc &gt; <span class="number">0x7FFFFFFF</span>L) <span class="keyword">return</span> <span class="number">0x7FFFFFFF</span>;</span><br><span class="line">    <span class="keyword">if</span> (acc &lt; (<span class="type">int64_t</span>)<span class="number">0x80000000</span>LL) <span class="keyword">return</span> (<span class="type">int32_t</span>)<span class="number">0x80000000</span>LL;</span><br><span class="line">    <span class="keyword">return</span> (<span class="type">int32_t</span>)acc;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// MATLAB: y = 0.5 * x + 0.25</span></span><br><span class="line"><span class="type">int32_t</span> <span class="title function_">Scale_Q31</span><span class="params">(<span class="type">int32_t</span> x)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int64_t</span> acc = (<span class="type">int64_t</span>)x * <span class="number">0x40000000</span>LL;  <span class="comment">// 0.5</span></span><br><span class="line">    acc += <span class="number">0x20000000</span>LL;                       <span class="comment">// 0.25</span></span><br><span class="line">    <span class="keyword">if</span> (acc &gt; <span class="number">0x7FFFFFFF</span>L) <span class="keyword">return</span> <span class="number">0x7FFFFFFF</span>;</span><br><span class="line">    <span class="keyword">if</span> (acc &lt; (<span class="type">int64_t</span>)<span class="number">0x80000000</span>LL) <span class="keyword">return</span> (<span class="type">int32_t</span>)<span class="number">0x80000000</span>LL;</span><br><span class="line">    <span class="keyword">return</span> (<span class="type">int32_t</span>)acc;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>定点移植的常见坑：</p>
-<ol>
-<li><strong>隐式类型提升</strong>：<code>int16_t</code> 与 <code>int32_t</code> 混算时，中间结果位宽不符合预期。</li>
-<li><strong>乘法后忘记移位</strong>：导致数值放大 $2^{31}$ 倍，迅速溢出。</li>
-<li><strong>饱和 vs 截断</strong>：溢出时直接截断和饱和到 <code>INT32_MAX</code> 的行为不同，需与 MATLAB <code>fi</code> 对象设置一致。</li>
-<li><strong>系数离线量化</strong>：滤波器系数先在 MATLAB 中量化到目标 Q 格式，再写入 <code>.rodata</code>，避免运行时反复转换。</li>
-</ol>
-<h4 id="算法翻译示例"><a href="#算法翻译示例" class="headerlink" title="算法翻译示例"></a>算法翻译示例</h4><p>MATLAB 向量点积：</p>
+<p>定点移植的常见错误：隐式类型提升、乘法后忘记移位、饱和策略与 MATLAB 不一致、系数未预先量化。</p>
+<p><strong>浮点型</strong>仅推荐在带 FPU 的高性能 DSP 上使用。无硬件浮点单元时，软件模拟浮点会消耗大量 cycle。</p>
+<h4 id="3-1-4-算法翻译示例"><a href="#3-1-4-算法翻译示例" class="headerlink" title="3.1.4 算法翻译示例"></a>3.1.4 算法翻译示例</h4><p>MATLAB：</p>
 <figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">s</span> = <span class="title">dot_prod</span><span class="params">(a, b)</span></span></span><br><span class="line">    s = sum(a .* b);</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
 
-<p>对应的 DSP C 初版（浮点，便于先验证逻辑）：</p>
+<p>C 语言浮点初版（先验证逻辑）：</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">float</span> <span class="title function_">Dot_Prod_Float</span><span class="params">(<span class="type">const</span> <span class="type">float</span> *p_a, <span class="type">const</span> <span class="type">float</span> *p_b, <span class="type">int</span> len)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> i;</span><br><span class="line">    <span class="type">float</span> sum = <span class="number">0.0f</span>;</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; len; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        sum += p_a[i] * p_b[i];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> sum;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>验证通过后再做三件事：改为定点、检查数组对齐（<code>aligned()</code>）、把循环交给编译器做 SIMD&#x2F;双总线优化。不要一上来就写汇编。</p>
-<h4 id="存储区域与变量生命周期"><a href="#存储区域与变量生命周期" class="headerlink" title="存储区域与变量生命周期"></a>存储区域与变量生命周期</h4><p><strong>存储区域</strong>：</p>
+<p>验证通过后再依次做：定点化 → 对齐检查 → 编译器优化。不要一开始就手写汇编。</p>
+<h4 id="3-1-5-内存区域与变量生命周期"><a href="#3-1-5-内存区域与变量生命周期" class="headerlink" title="3.1.5 内存区域与变量生命周期"></a>3.1.5 内存区域与变量生命周期</h4><p>DSP 程序的内存分为以下几个区域：</p>
 <table>
 <thead>
 <tr>
 <th>区域</th>
 <th>特点</th>
+<th>适用场景</th>
 </tr>
 </thead>
 <tbody><tr>
 <td>栈</td>
-<td>固定大小（DSP 通常 2~8KB），自动分配释放，速度快但空间极小</td>
+<td>空间极小（通常 2~8 KB），自动管理</td>
+<td>函数内小临时变量</td>
 </tr>
 <tr>
 <td>堆</td>
-<td>手动申请释放，易碎片化，DSP 开发中几乎禁用</td>
+<td>手动申请释放，易碎片化</td>
+<td>DSP 开发中应避免使用</td>
 </tr>
 <tr>
 <td>.data</td>
-<td>已初始化全局&#x2F;静态变量</td>
+<td>已初始化的全局&#x2F;静态变量</td>
+<td>有初值的状态量</td>
 </tr>
 <tr>
 <td>.bss</td>
-<td>未初始化或零初始化全局&#x2F;静态变量</td>
+<td>零初始化的全局&#x2F;静态变量</td>
+<td>大缓冲区、算法状态</td>
 </tr>
 <tr>
 <td>.rodata</td>
-<td>只读常量，可放片内 RAM 或片外 Flash</td>
+<td>只读常量</td>
+<td>滤波器系数、查找表</td>
 </tr>
 </tbody></table>
-<p><strong>变量类型</strong>：</p>
+<p><strong>变量生命周期</strong>：</p>
 <table>
 <thead>
 <tr>
 <th>类型</th>
 <th>作用域</th>
 <th>生命周期</th>
-<th>内存位置</th>
+<th>存放位置</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>临时变量</td>
-<td>函数&#x2F;代码块内</td>
+<td>局部变量</td>
+<td>函数内</td>
 <td>函数执行期间</td>
 <td>栈</td>
 </tr>
@@ -476,7 +477,7 @@
 <tr>
 <td>局部静态变量</td>
 <td>函数内</td>
-<td>上电创建、掉电销毁，值保留</td>
+<td>上电到掉电，值保留</td>
 <td>.data &#x2F; .bss</td>
 </tr>
 <tr>
@@ -486,246 +487,117 @@
 <td>.data &#x2F; .bss</td>
 </tr>
 </tbody></table>
-<blockquote>
-<p>必须清楚数据存储位置、作用范围与声明周期。勿定义大尺寸临时变量，避免栈溢出。</p>
-</blockquote>
-<p><strong>内存规划建议</strong>：在写代码前先估算各缓冲区大小。例如 48 kHz、1024 点 FFT、双通道浮点缓冲：</p>
-<p>$$\text{缓冲大小} &#x3D; 1024 \times 2,\text{ch} \times 4,\text{B} \approx 8,\text{KB}$$</p>
-<p>若还有中间频谱缓冲、系数表，累加后对照 Linker Map 确认是否超出 L1&#x2F;L2 容量。大数组、算法状态一律放 <code>.bss</code>&#x2F;全局区，局部只留小临时变量。</p>
-<hr>
-<h3 id="CCES（掌握）"><a href="#CCES（掌握）" class="headerlink" title="CCES（掌握）"></a>CCES（掌握）</h3><p><strong>CrossCore Embedded Studio</strong> 是 ADI 为其 Blackfin、SHARC、ARM 系列处理器打造的官方 IDE，基于 Eclipse，已完全取代 VisualDSP++。</p>
-<h4 id="核心功能"><a href="#核心功能" class="headerlink" title="核心功能"></a>核心功能</h4><ul>
-<li><strong>代码开发</strong>：C&#x2F;C++&#x2F;汇编，语法高亮、补全、项目管理。</li>
-<li><strong>编译工具链</strong>：优化编译器、链接器、汇编器，支持 MISRA-C 与 SIMD。</li>
-<li><strong>调试系统</strong>：JTAG 多核调试、实时跟踪、性能分析。</li>
-<li><strong>集成组件</strong>：驱动库、RTOS、文件系统。</li>
-<li><strong>Flash 编程</strong>：Bootloader 生成与固件烧录。</li>
+<p><strong>实践要点</strong>：大数组和算法缓冲区不要放在栈上，应声明为全局或静态变量。写代码前先估算缓冲区大小，例如 48 kHz 采样率、1024 点、双通道浮点缓冲：</p>
+<p>$$\text{大小} &#x3D; 1024 \times 2 \times 4,\text{B} \approx 8,\text{KB}$$</p>
+<p>累加所有缓冲区后，对照 Linker Map 确认未超出片内 RAM 容量。</p>
+<h3 id="3-2-CCES-集成开发环境"><a href="#3-2-CCES-集成开发环境" class="headerlink" title="3.2 CCES 集成开发环境"></a>3.2 CCES 集成开发环境</h3><p><strong>CrossCore Embedded Studio（CCES）</strong> 是 ADI 官方 IDE，支持 Blackfin、SHARC、ARM 系列处理器，基于 Eclipse 构建，已取代 VisualDSP++。</p>
+<p><strong>主要功能</strong>：</p>
+<ul>
+<li>代码编辑与项目管理（C&#x2F;C++&#x2F;汇编）；</li>
+<li>优化编译器、链接器，支持 MISRA-C 与 SIMD；</li>
+<li>JTAG 调试、实时跟踪、性能分析；</li>
+<li>驱动库、RTOS 组件、Flash 烧录。</li>
 </ul>
-<h4 id="学习路径"><a href="#学习路径" class="headerlink" title="学习路径"></a>学习路径</h4><table>
+<p><strong>建议学习顺序</strong>：</p>
+<table>
 <thead>
 <tr>
 <th>阶段</th>
-<th>内容</th>
+<th>学习内容</th>
 </tr>
 </thead>
 <tbody><tr>
 <td>入门</td>
-<td>熟悉 Project Explorer、编辑器、Console、Debug 视图；<code>Ctrl+/</code> 注释、<code>Ctrl+Shift+B</code> 编译、<code>F11</code> 调试</td>
+<td>熟悉工程管理、编译（<code>Ctrl+Shift+B</code>）、调试（<code>F11</code>）</td>
 </tr>
 <tr>
 <td>进阶</td>
-<td>掌握寄存器&#x2F;SIMD&#x2F;DMA；浮点转定点精度与溢出；性能分析；与 MATLAB 对比验证</td>
+<td>寄存器查看、DMA 配置、浮点转定点、与 MATLAB 对比</td>
 </tr>
 <tr>
 <td>实战</td>
-<td>优化代码体积与速度；编写工程文档</td>
+<td>性能 Profile、汇编分析、代码体积优化</td>
 </tr>
 </tbody></table>
-<p><strong>学习资源</strong>：ADI 官方 Getting Started Guide、Compiler Manual、Processor Manual、EE-375 应用笔记、EngineerZone 社区。</p>
-<blockquote>
-<p>不同于标准 C，DSP 开发一般提供全套工具链帮助算法开发。</p>
-</blockquote>
-<h4 id="典型调试流程"><a href="#典型调试流程" class="headerlink" title="典型调试流程"></a>典型调试流程</h4><p>一次完整的 CCES 调试通常按以下顺序进行：</p>
+<p><strong>典型调试流程</strong>：</p>
 <ol>
-<li><strong>Build</strong>：<code>Project → Build Project</code>，关注 Warning（未使用变量、隐式转换等）。</li>
-<li><strong>加载</strong>：连接 ICE 仿真器或 EZ-KIT，Download 程序。</li>
-<li><strong>断点</strong>：在算法入口、循环内部、DMA 完成回调处设断点。</li>
-<li><strong>观察</strong>：Watch 窗口查看关键变量；Memory 窗口查看缓冲区；Register 窗口确认外设状态。</li>
-<li><strong>对比</strong>：把 DSP 输出 dump 为 <code>.dat</code>&#x2F;<code>.txt</code>，用 MATLAB 脚本与黄金数据做差。</li>
-<li><strong>Profile</strong>：用 <code>cycles.h</code> 或 CCES Profile 找热点函数。</li>
+<li>编译工程，处理所有 Warning；</li>
+<li>连接仿真器或开发板，下载程序；</li>
+<li>在算法入口和关键循环处设断点；</li>
+<li>通过 Watch &#x2F; Memory &#x2F; Register 窗口观察数据；</li>
+<li>导出 DSP 输出，用 MATLAB 脚本与黄金数据对比；</li>
+<li>用 <code>cycles.h</code> 或 Profile 工具定位性能热点。</li>
 </ol>
-<p><strong>编译优化等级</strong>的使用建议：</p>
+<p><strong>编译优化等级选用</strong>：</p>
 <table>
 <thead>
 <tr>
-<th>优化等级</th>
+<th>等级</th>
 <th>适用场景</th>
 </tr>
 </thead>
 <tbody><tr>
 <td><code>-O0</code></td>
-<td>初期调试，方便单步跟踪</td>
+<td>初期调试，便于单步跟踪</td>
 </tr>
 <tr>
-<td><code>-O1</code>&#x2F;<code>-O2</code></td>
+<td><code>-O1</code> &#x2F; <code>-O2</code></td>
 <td>日常开发与功能验证</td>
 </tr>
 <tr>
-<td>开启 SIMD&#x2F;双总线</td>
-<td>性能调优阶段，须重新对比 MATLAB 精度</td>
+<td>开启 SIMD &#x2F; 双总线</td>
+<td>性能调优阶段，须重新验证精度</td>
 </tr>
 </tbody></table>
-<p>生成汇编：<code>Project → Generate Assembly</code>，可直观看到编译器是否启用 SIMD、硬件循环（<code>lcntr=...</code>）及双总线取数（<code>dm</code>&#x2F;<code>pm</code> 并行）。</p>
-<hr>
-<h3 id="Git（掌握）"><a href="#Git（掌握）" class="headerlink" title="Git（掌握）"></a>Git（掌握）</h3><h4 id="What-1"><a href="#What-1" class="headerlink" title="What"></a>What</h4><p>Git 是分布式版本控制系统，追踪代码修改历史、管理多人协作变更，支持回滚与合并。</p>
-<p><strong>核心概念</strong>：</p>
-<ul>
-<li><strong>远程仓库</strong>：存放在码云等平台，所有开发者可见。</li>
-<li><strong>本地仓库</strong>：源于远程仓库的本地副本。</li>
-<li><strong>Git 仓库</strong>：从被 Git 管控起，每次提交视为一个版本。</li>
-<li><strong>工作库</strong>：当前处理的分支。</li>
-</ul>
-<p><strong>基本工作流</strong>：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">工作区 --git add--&gt; 暂存区 --git commit--&gt; 本地仓库 --git push--&gt; 远程仓库</span><br></pre></td></tr></table></figure>
-
-<h4 id="Why-1"><a href="#Why-1" class="headerlink" title="Why"></a>Why</h4><ol>
-<li>解决多角色协作中的代码冲突。</li>
-<li>解决版本混乱，支持标签、分支与回滚。</li>
-<li>问题追溯：定位「谁改了什么、哪一行」。</li>
-<li>代码备份与共享，防止本地丢失。</li>
-</ol>
-<h4 id="How"><a href="#How" class="headerlink" title="How"></a>How</h4><ul>
-<li>不提交 <code>debug</code> 文件夹、<code>.bin</code>&#x2F;<code>.dat</code> 等非文本文件。</li>
-<li>提交信息简洁、描述清晰、频繁提交。</li>
-<li>功能开发使用独立分支，保护 <code>master</code> 分支。</li>
-</ul>
-<h4 id="简易学习法"><a href="#简易学习法" class="headerlink" title="简易学习法"></a>简易学习法</h4><p>掌握 3 个核心命令即可解决 80% 需求：</p>
-<ul>
-<li><code>git init</code>：初始化仓库</li>
-<li><code>git add</code> + <code>git commit</code>：保存变更</li>
-<li><code>git checkout</code>：回滚到稳定版本</li>
-</ul>
-<p><strong>工具选择</strong>：</p>
+<p>通过 <code>Project → Generate Assembly</code> 可查看编译器是否启用了 SIMD 指令、硬件循环（<code>lcntr</code>）和双总线并行取数。</p>
+<h3 id="3-3-串口调试"><a href="#3-3-串口调试" class="headerlink" title="3.3 串口调试"></a>3.3 串口调试</h3><p>DSP 没有图形界面，调试时需要通过串口输出中间变量和运行日志。UART 仅需 TX&#x2F;RX 两根线，硬件成本极低，开发阶段和量产后的现场维护均可使用。</p>
 <table>
 <thead>
 <tr>
-<th>工具</th>
-<th>特点</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Git Bash</td>
-<td>纯命令行，灵活高效，学习曲线陡</td>
-</tr>
-<tr>
-<td>TortoiseGit</td>
-<td>Windows 右键集成，入门简单，复杂场景功能弱</td>
-</tr>
-<tr>
-<td>SourceTree</td>
-<td>图形界面，分支历史直观，功能与易用性平衡</td>
-</tr>
-</tbody></table>
-<h4 id="嵌入式项目推荐分支策略"><a href="#嵌入式项目推荐分支策略" class="headerlink" title="嵌入式项目推荐分支策略"></a>嵌入式项目推荐分支策略</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">main        ← 稳定可发布版本，禁止直接 push</span><br><span class="line">dev         ← 日常集成</span><br><span class="line">feature/fft ← 功能开发分支，完成后 merge 到 dev</span><br><span class="line">hotfix/xxx  ← 紧急修复</span><br></pre></td></tr></table></figure>
-
-<p><strong><code>.gitignore</code> 建议排除</strong>：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">debug/</span><br><span class="line">*.o</span><br><span class="line">*.d</span><br><span class="line">*.dxe</span><br><span class="line">*.ldr</span><br><span class="line">*.dat</span><br><span class="line">*.bin</span><br><span class="line">.settings/</span><br></pre></td></tr></table></figure>
-
-<p><strong>提交信息格式</strong>：<code>[模块] 动作: 描述</code>，例如 <code>[dsp_fft] fix: 修复奇数长度 FFT 溢出</code>。</p>
-<hr>
-<h3 id="串口工具（了解）"><a href="#串口工具（了解）" class="headerlink" title="串口工具（了解）"></a>串口工具（了解）</h3><p><strong>UART（通用异步收发传输器）</strong> 仅需 TX&#x2F;RX 两线，硬件简单、成本极低。</p>
-<h4 id="为何-DSP-开发需要串口"><a href="#为何-DSP-开发需要串口" class="headerlink" title="为何 DSP 开发需要串口"></a>为何 DSP 开发需要串口</h4><p>DSP 缺乏可视化界面直接观察变量，串口以极低成本实现数据传输，契合 DSP 精简硬件设计。</p>
-<h4 id="能解决的问题"><a href="#能解决的问题" class="headerlink" title="能解决的问题"></a>能解决的问题</h4><ul>
-<li>调试时输出中间算法值与运行日志。</li>
-<li>DSP 与上位机&#x2F;外设的数据交换。</li>
-<li>现场维护时远程修改参数，无需拆机。</li>
-</ul>
-<h4 id="串口-vs-仿真器"><a href="#串口-vs-仿真器" class="headerlink" title="串口 vs 仿真器"></a>串口 vs 仿真器</h4><table>
-<thead>
-<tr>
-<th></th>
+<th>对比项</th>
 <th>仿真器（如 ICE-1000）</th>
 <th>串口</th>
 </tr>
 </thead>
 <tbody><tr>
 <td>功能</td>
-<td>断点调试、读写寄存器</td>
-<td>仅数据通信</td>
+<td>断点、读写寄存器</td>
+<td>数据收发、日志输出</td>
 </tr>
 <tr>
-<td>阶段</td>
-<td>开发阶段</td>
+<td>适用阶段</td>
+<td>开发调试</td>
 <td>开发 + 量产运维</td>
 </tr>
 <tr>
 <td>成本</td>
-<td>需匹配硬件</td>
+<td>需专用硬件</td>
 <td>极低</td>
 </tr>
 </tbody></table>
-<p><strong>串口工具分类</strong>：</p>
-<ul>
-<li><strong>硬件</strong>：USB 转串口模块（如 CH340），需安装驱动。</li>
-<li><strong>软件</strong>：SecureCRT、SSCOM 等调试助手，可视化收发数据。</li>
-</ul>
-<p>常用波特率 115200（8N1）。调试时建议定义统一的日志宏，量产版本可通过编译开关关闭：</p>
+<p>常用配置为 115200 波特率、8 数据位、无校验、1 停止位（8N1）。建议封装统一的日志宏，量产版本通过编译开关关闭：</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">ifdef</span> DEBUG_UART</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> LOG(fmt, ...) Uart_Printf(<span class="string">&quot;[%s:%d] &quot;</span> fmt, __FILE__, __LINE__, ##__VA_ARGS__)</span></span><br><span class="line"><span class="meta">#<span class="keyword">else</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> LOG(fmt, ...) ((void)0)</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
 
+<h3 id="本章小结-2"><a href="#本章小结-2" class="headerlink" title="本章小结"></a>本章小结</h3><p>C 语言是算法移植的载体，CCES 是日常开发与调试的平台，串口是观察程序运行状态的窗口。初学者应先用浮点 C 代码跑通逻辑，再逐步引入定点和优化。</p>
 <hr>
-<h2 id="DSP-开发入门"><a href="#DSP-开发入门" class="headerlink" title="DSP 开发入门"></a>DSP 开发入门</h2><h3 id="什么是-DSP"><a href="#什么是-DSP" class="headerlink" title="什么是 DSP"></a>什么是 DSP</h3><p><strong>数字信号处理器（Digital Signal Processor）</strong> 是专为高速实时处理数字信号设计的专用微处理器：</p>
+<h2 id="第四章-DSP-硬件基础"><a href="#第四章-DSP-硬件基础" class="headerlink" title="第四章 DSP 硬件基础"></a>第四章 DSP 硬件基础</h2><h3 id="4-1-数字信号处理器概述"><a href="#4-1-数字信号处理器概述" class="headerlink" title="4.1 数字信号处理器概述"></a>4.1 数字信号处理器概述</h3><p><strong>数字信号处理器（DSP）</strong> 是专为高速实时信号处理设计的微处理器，具有以下特征：</p>
 <ul>
-<li>哈佛架构（程序&#x2F;数据总线分离）</li>
-<li>内置硬件 MAC 单元、流水线、SIMD 并行指令</li>
-<li>高效执行滤波、FFT、频谱分析等算法</li>
-<li>广泛用于 NVH、音频、工业控制等嵌入式信号处理场景</li>
+<li><strong>哈佛架构</strong>：程序存储与数据存储分离，可并行取指与取数；</li>
+<li><strong>硬件 MAC 单元</strong>：单周期完成乘累加，是滤波、FFT 的核心运算；</li>
+<li><strong>流水线与 SIMD</strong>：多条指令或两组数据并行处理；</li>
+<li><strong>丰富外设</strong>：可直接对接 ADC、DAC、传感器与通信接口。</li>
 </ul>
-<h3 id="为何用-DSP-做量产处理"><a href="#为何用-DSP-做量产处理" class="headerlink" title="为何用 DSP 做量产处理"></a>为何用 DSP 做量产处理</h3><table>
-<thead>
-<tr>
-<th>优势</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>实时性</td>
-<td>硬件 MAC + 流水线，时延可预测，不受系统负载波动影响</td>
-</tr>
-<tr>
-<td>性价比</td>
-<td>单颗 DSP 成本远低于 MCU+FPGA 组合</td>
-</tr>
-<tr>
-<td>低功耗</td>
-<td>同等算力下功耗可比通用 CPU 降低 50% 以上</td>
-</tr>
-<tr>
-<td>高稳定性</td>
-<td>算法与硬件耦合度高，固件无冗余开销，故障率低</td>
-</tr>
-<tr>
-<td>易集成</td>
-<td>丰富外设接口，可直接对接传感器与上位机</td>
-</tr>
-</tbody></table>
-<h3 id="基础设施"><a href="#基础设施" class="headerlink" title="基础设施"></a>基础设施</h3><h4 id="适配标准-C"><a href="#适配标准-C" class="headerlink" title="适配标准 C"></a>适配标准 C</h4><p>标准 ANSI C 无法直接适配 DSP（哈佛架构、定点运算、无 OS 内存管理）。ADI 提供<strong>扩展 C</strong>，修改 <code>memcpy</code>、<code>sqrt</code> 等基础函数以适配 DSP 内存布局与定点类型。</p>
-<p><strong>好处</strong>：兼容性兜底、规范统一、降低重复劳动。</p>
-<h4 id="专用信号处理算法库"><a href="#专用信号处理算法库" class="headerlink" title="专用信号处理算法库"></a>专用信号处理算法库</h4><p>ADI 针对自家 DSP 封装的 FFT、FIR&#x2F;IIR 滤波、MAC、频谱分析、定点运算等函数，深度优化 SIMD、硬件 MAC 与定点缩放逻辑。</p>
-<table>
-<thead>
-<tr>
-<th>好处</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>性能最大化</td>
-<td>核心运算比手写 C 快 30%~80%</td>
-</tr>
-<tr>
-<td>稳定性保障</td>
-<td>全场景测试，避免精度 bug 与溢出</td>
-</tr>
-<tr>
-<td>降低门槛</td>
-<td>调用 <code>adi_fft_q31</code> 等封装函数即可</td>
-</tr>
-<tr>
-<td>量产适配</td>
-<td>针对代码体积与功耗优化</td>
-</tr>
-</tbody></table>
-<h4 id="规格书"><a href="#规格书" class="headerlink" title="规格书"></a>规格书</h4><blockquote>
-<p>需重点关注：硬件设计规格书（DSP 芯片规格、板级硬件设计规格），是芯片厂商最权威的说明。</p>
-</blockquote>
-<p>DSP 开发应借势用 C 调用硬件特性，实现数倍性能提升。规格书是：</p>
+<p>相比通用 CPU，DSP 在信号处理场景下具有可预测的时延、更高的能效比和更低的硬件成本，适合音频、NVH、工业控制等领域的量产部署。</p>
+<h3 id="4-2-开发基础设施"><a href="#4-2-开发基础设施" class="headerlink" title="4.2 开发基础设施"></a>4.2 开发基础设施</h3><h4 id="扩展-C-与算法库"><a href="#扩展-C-与算法库" class="headerlink" title="扩展 C 与算法库"></a>扩展 C 与算法库</h4><p>标准 ANSI C 无法直接运行在 DSP 上。ADI 提供的扩展 C 对基础库函数做了硬件适配。同时，ADI 信号处理算法库封装了 FFT、FIR&#x2F;IIR 滤波、频谱分析等函数，内部已做 SIMD 与定点优化，核心运算通常比手写 C 快 30%~80%。初学者应优先查阅库函数接口，避免重复造轮子。</p>
+<h4 id="规格书"><a href="#规格书" class="headerlink" title="规格书"></a>规格书</h4><p>芯片数据手册（Data Sheet）和硬件参考手册是开发中最权威的参考。阅读规格书时，重点关注：</p>
 <ul>
-<li><strong>底层依据</strong>：寄存器地址、时钟、RAM 分区、MAC 特性、UART&#x2F;DMA&#x2F;中断配置。</li>
-<li><strong>资源匹配</strong>：算力、存储、定点特性，指导 FFT 点数与内存分配上限。</li>
-<li><strong>规避风险</strong>：电源、温度、EMC&#x2F;EMI 约束，确保跨批次兼容。</li>
-<li><strong>降低协作成本</strong>：硬件与算法&#x2F;嵌入式工程师的「共同语言」。</li>
+<li>寄存器地址、时钟频率、RAM 分区；</li>
+<li>MAC 单元特性、定点格式支持；</li>
+<li>UART、DMA、中断的配置方式；</li>
+<li>电源、温度、EMC 约束。</li>
 </ul>
-<h3 id="DSP-架构"><a href="#DSP-架构" class="headerlink" title="DSP 架构"></a>DSP 架构</h3><h4 id="冯·诺依曼-vs-哈佛架构"><a href="#冯·诺依曼-vs-哈佛架构" class="headerlink" title="冯·诺依曼 vs 哈佛架构"></a>冯·诺依曼 vs 哈佛架构</h4><table>
+<p>规格书是算法工程师与硬件工程师之间的共同语言。在评估算法可行性时，应先确认片内 RAM 容量和算力是否满足需求，而不是写完代码后再发现放不下。</p>
+<h3 id="4-3-处理器架构"><a href="#4-3-处理器架构" class="headerlink" title="4.3 处理器架构"></a>4.3 处理器架构</h3><h4 id="哈佛架构-vs-冯·诺依曼架构"><a href="#哈佛架构-vs-冯·诺依曼架构" class="headerlink" title="哈佛架构 vs 冯·诺依曼架构"></a>哈佛架构 vs 冯·诺依曼架构</h4><table>
 <thead>
 <tr>
 <th></th>
@@ -734,463 +606,262 @@
 </tr>
 </thead>
 <tbody><tr>
-<td>特点</td>
-<td>程序与数据共享总线，分时访问</td>
-<td>程序存储器与数据存储器分离，并行访问</td>
+<td>结构</td>
+<td>程序与数据共享总线和存储</td>
+<td>程序与数据分离，独立总线</td>
 </tr>
 <tr>
 <td>优点</td>
-<td>总线资源占用少</td>
-<td>执行效率高</td>
+<td>结构简单，成本低</td>
+<td>可并行取指与取数，吞吐量高</td>
 </tr>
 <tr>
 <td>适用</td>
 <td>通用计算</td>
-<td>DSP 实时信号处理</td>
+<td>实时信号处理</td>
 </tr>
 </tbody></table>
-<p>DSP 普遍采用哈佛架构，突破总线瓶颈，适合 MAC、滤波、FFT 等高频运算。</p>
-<h4 id="SHARC-核心（了解架构图）"><a href="#SHARC-核心（了解架构图）" class="headerlink" title="SHARC+ 核心（了解架构图）"></a>SHARC+ 核心（了解架构图）</h4><p>关注官方文档中的关键模块：</p>
+<p>ADI SHARC+ 采用改进的哈佛架构，拥有独立的 PM（程序存储器）总线和 DM（数据存储器）总线。</p>
+<h4 id="SHARC-核心结构"><a href="#SHARC-核心结构" class="headerlink" title="SHARC+ 核心结构"></a>SHARC+ 核心结构</h4><p>阅读官方架构图时，建议关注以下模块：</p>
 <ul>
-<li>PM&#x2F;DM 及总线宽度</li>
-<li>DAG1&#x2F;DAG2（数据地址发生器）</li>
-<li>RAM 与 Cache 分级</li>
-<li>SIMD、ALU-Multiplier-Shifter</li>
-<li>11 级程序序列器</li>
-<li>DMA-I&#x2F;O、Accelerators</li>
+<li><strong>PM &#x2F; DM 总线</strong>：指令与数据各自的传输通道及位宽；</li>
+<li><strong>DAG1 &#x2F; DAG2</strong>：数据地址发生器，为访存操作提供地址；</li>
+<li><strong>L1 Cache &#x2F; L1 RAM</strong>：最快，存放热点数据和指令；</li>
+<li><strong>L2 RAM</strong>：容量更大，存放中等规模缓冲；</li>
+<li><strong>SIMD 计算单元（PEx &#x2F; PEy）</strong>：两套并行运算单元；</li>
+<li><strong>11 级流水线</strong>：指令分阶段执行，实现指令级并行；</li>
+<li><strong>DMA 与硬件加速器</strong>：分担数据传输和滤波运算。</li>
 </ul>
-<p>SHARC+ 的数据通路可概括为：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">外设/Flash ──DMA──► L2/DDR ──► L1 Cache/RAM ──► SIMD Core (PEx/PEy)</span><br><span class="line">                      ▲                              │</span><br><span class="line">                      └──────── 计算结果写回 ─────────┘</span><br></pre></td></tr></table></figure>
+<p>数据通路可概括为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">外设/Flash ──DMA──► L2/DDR ──► L1 Cache/RAM ──► SIMD Core</span><br><span class="line">                      ▲                              │</span><br><span class="line">                      └──────── 结果写回 ─────────────┘</span><br></pre></td></tr></table></figure>
 
-<p>阅读官方架构图时，重点回答三个问题：</p>
-<ol>
-<li>指令和数据分别从哪条总线来？（PM vs DM）</li>
-<li>当前算法的数据热点能否放进 L1？</li>
-<li>有没有硬件加速器或 DMA 可以 offload 当前瓶颈？</li>
-</ol>
-<h3 id="数据存储"><a href="#数据存储" class="headerlink" title="数据存储"></a>数据存储</h3><p><strong>存储程序与程序控制</strong>：步骤（软件）与原料（数据）预先存入存储器，计算机自动逐条取指执行。</p>
-<blockquote>
-<p>与 MATLAB 不同，DSP 开发首要关注<strong>数据存在哪里</strong>。计算的前提是拿到数据，否则陷入冯·诺依曼瓶颈。</p>
-</blockquote>
-<p><strong>存储器分类</strong>：</p>
-<ul>
-<li><strong>易失性</strong>：RAM（DRAM、SRAM）</li>
-<li><strong>非易失性</strong>：Flash、EEPROM</li>
-<li><strong>寄存器</strong>：CPU 内部，最快但容量极小</li>
-</ul>
+<h3 id="4-4-存储系统"><a href="#4-4-存储系统" class="headerlink" title="4.4 存储系统"></a>4.4 存储系统</h3><h4 id="存储层次"><a href="#存储层次" class="headerlink" title="存储层次"></a>存储层次</h4><p>与 MATLAB 不同，DSP 开发的首要问题是<strong>数据放在哪里</strong>。不同存储层的速度和容量差异巨大：</p>
 <table>
 <thead>
 <tr>
 <th>类型</th>
-<th>特点</th>
-<th>DSP 典型用途</th>
+<th>速度</th>
+<th>容量</th>
+<th>典型用途</th>
 </tr>
 </thead>
 <tbody><tr>
+<td>寄存器</td>
+<td>最快</td>
+<td>极小</td>
+<td>循环变量、累加器</td>
+</tr>
+<tr>
 <td>L1 RAM</td>
-<td>极快、低延迟</td>
-<td>高频指令与核心算法数据</td>
+<td>极快</td>
+<td>数百 KB</td>
+<td>热点数据、核心算法缓冲</td>
 </tr>
 <tr>
 <td>L2 RAM</td>
-<td>比 L1 慢但容量更大</td>
-<td>滤波系数、FFT 缓冲等中等规模数据</td>
+<td>较快</td>
+<td>数 MB</td>
+<td>滤波系数、FFT 工作区</td>
 </tr>
 <tr>
-<td>DDR</td>
-<td>大容量、低成本、高延迟</td>
-<td>大规模采样数据、完整代码</td>
+<td>DDR（片外）</td>
+<td>慢</td>
+<td>数百 MB~GB</td>
+<td>大容量采样数据</td>
 </tr>
 <tr>
 <td>Flash</td>
-<td>非易失、慢擦写</td>
-<td>启动程序、固件、参数；上电后加载到 RAM 运行</td>
+<td>慢，非易失</td>
+<td>较大</td>
+<td>固件存储，上电后加载到 RAM</td>
 </tr>
 </tbody></table>
-<p><strong>内存分配原则</strong>：</p>
+<p><strong>分配原则</strong>：</p>
 <table>
 <thead>
 <tr>
-<th>数据类型</th>
+<th>数据</th>
 <th>推荐位置</th>
 <th>原因</th>
 </tr>
 </thead>
 <tbody><tr>
 <td>中断&#x2F;DMA 缓冲区</td>
-<td>L1 或 L2 片内 RAM</td>
+<td>L1 或 L2</td>
 <td>低延迟、确定性访问</td>
 </tr>
 <tr>
-<td>滤波器系数、窗函数</td>
-<td>L2 或 <code>.rodata</code></td>
-<td>只读、反复访问</td>
+<td>滤波器系数</td>
+<td>L2 或 .rodata</td>
+<td>反复读取</td>
 </tr>
 <tr>
-<td>大块历史采样</td>
+<td>大块历史数据</td>
 <td>DDR</td>
-<td>容量大，容忍较高延迟</td>
+<td>容量需求大</td>
 </tr>
 <tr>
-<td>启动代码、常量表</td>
+<td>启动代码</td>
 <td>Flash</td>
-<td>非易失，上电后拷贝到 RAM</td>
+<td>非易失</td>
 </tr>
 </tbody></table>
-<p>Link 脚本（<code>.ldf</code>）决定了段（section）最终落在哪个物理存储区。修改全局数组大小后，务必重新检查 Map 文件中的 <code>Total internal memory used</code>，避免静默溢出到片外导致性能骤降。</p>
-<h3 id="总线"><a href="#总线" class="headerlink" title="总线"></a>总线</h3><p>总线是计算机各部件间传输信息的公共通道。</p>
-<p><strong>三类总线</strong>：</p>
+<p>Link 脚本（<code>.ldf</code>）决定各段（section）的物理存放位置。每次修改全局数组大小后，应检查 Map 文件中的 <code>Total internal memory used</code>。</p>
+<h4 id="总线与地址映射"><a href="#总线与地址映射" class="headerlink" title="总线与地址映射"></a>总线与地址映射</h4><p>总线是各硬件模块之间的数据传输通道，分为三类：</p>
 <ul>
-<li><strong>数据总线（DB）</strong>：传输数据，位宽决定一次传输量。</li>
-<li><strong>地址总线（AB）</strong>：传输地址，位宽决定可寻址空间。</li>
-<li><strong>控制总线（CB）</strong>：传输控制、时序与状态信号。</li>
+<li><strong>数据总线</strong>：传输数据，位宽决定单次传输量；</li>
+<li><strong>地址总线</strong>：传输地址，位宽决定可寻址空间；</li>
+<li><strong>控制总线</strong>：传输读&#x2F;写控制信号。</li>
 </ul>
-<p>CPU 与芯片交互需三类信息：地址（数据在哪）、控制（读&#x2F;写）、数据（具体内容）。</p>
-<p><strong>DAG（数据地址发生器）</strong>：</p>
-<ul>
-<li>DAG1：通过 DM 总线访问 32 位地址</li>
-<li>DAG2：通过 PM 总线提供 32 位地址</li>
-</ul>
-<p><strong>性能参数</strong>：</p>
-<p>$$\text{总线带宽} &#x3D; \frac{\text{总线位宽}}{8} \times \frac{\text{总线工作频率}}{\text{总线周期时钟数}}$$</p>
-<h3 id="存储器映像"><a href="#存储器映像" class="headerlink" title="存储器映像"></a>存储器映像</h3><p>存储器映像是 DSP 核心地址管理机制，将所有可访问硬件资源（程序存储器、数据存储器、片内&#x2F;片外存储、外设寄存器）统一映射到线性地址空间。</p>
-<p><strong>关注点</strong>：</p>
-<ul>
-<li>32 位地址总线：<code>0x0000 0000</code> ~ <code>0xFFFF FFFF</code></li>
-<li>L1 映像区：4 块，共 640KB</li>
-<li>L2 映像区：起始于 <code>0x2000 0000</code>，2MB</li>
-<li>DMC0：起始于 <code>0x8000 0000</code>，1GB</li>
-</ul>
-<h3 id="计算单元"><a href="#计算单元" class="headerlink" title="计算单元"></a>计算单元</h3><table>
+<p>$$\text{总线带宽} &#x3D; \frac{\text{位宽（bit）}}{8} \times \frac{\text{工作频率}}{\text{周期数}}$$</p>
+<p>存储器映像将所有硬件资源（程序存储、数据存储、外设寄存器）映射到统一的线性地址空间。SHARC+ 平台上需关注 L1 映像区（约 640 KB）、L2 映像区（起始于 <code>0x2000 0000</code>，2 MB）等关键区域。</p>
+<h3 id="4-5-计算与并行"><a href="#4-5-计算与并行" class="headerlink" title="4.5 计算与并行"></a>4.5 计算与并行</h3><h4 id="基本计算单元"><a href="#基本计算单元" class="headerlink" title="基本计算单元"></a>基本计算单元</h4><table>
 <thead>
 <tr>
 <th>单元</th>
 <th>功能</th>
-<th>DSP 场景</th>
+<th>在信号处理中的作用</th>
 </tr>
 </thead>
 <tbody><tr>
 <td>ALU</td>
-<td>算术与逻辑运算</td>
-<td>FIR 累加、溢出判断、分支比较；原生不支持乘法</td>
+<td>加减、逻辑运算</td>
+<td>累加、比较、分支判断</td>
 </tr>
 <tr>
 <td>乘法器</td>
-<td>独立乘法硬件</td>
-<td>MAC 操作核心，单周期完成「乘+累加」，FFT&#x2F;FIR&#x2F;IIR 性能关键</td>
+<td>独立乘法</td>
+<td>MAC 运算的核心</td>
 </tr>
 <tr>
 <td>移位器</td>
-<td>数据位移动</td>
-<td>定点 Q 格式缩放、快速乘除 $2^n$、避免除法指令</td>
+<td>位移操作</td>
+<td>定点缩放、快速乘除 $2^n$</td>
 </tr>
 </tbody></table>
-<p>SHARC 包含两套计算单元（PEx 与 PEy），单条指令可同时计算两次（SIMD）。</p>
-<h3 id="SIMD（单指令多数据）"><a href="#SIMD（单指令多数据）" class="headerlink" title="SIMD（单指令多数据）"></a>SIMD（单指令多数据）</h3><p><strong>SIMD（Single Instruction Multiple Data）</strong> 是数据级并行技术，一条指令同时对多组数据执行相同操作。</p>
-<p><strong>三类并行</strong>：</p>
-<ol>
-<li>指令级并行：流水线、超标量</li>
-<li>线程级并行：多线程</li>
-<li>数据级并行：SIMD</li>
-</ol>
-<p><strong>核心优势</strong>：</p>
-<ul>
-<li>一条指令处理 2&#x2F;4&#x2F;8 组数据，大幅降低时延</li>
-<li>减少指令数，降低取指&#x2F;译码开销</li>
-<li>天然适配信号处理批量数据特征</li>
-<li>无需重构算法逻辑，调用 SIMD 优化库即可加速</li>
-</ul>
-<p><strong>SIMD 使用要点</strong>：</p>
-<ul>
-<li>数据地址和长度需满足对齐要求，否则编译器无法生成 SIMD 指令。SHARC 上常用 <code>aligned(ptr, 2 * sizeof(float))</code>。</li>
-<li>优先调用 ADI 库函数（如向量乘加），其内部已处理对齐与饱和。</li>
-<li>手写 SIMD 前，先用 <code>-O2</code> + 生成汇编确认编译器是否已自动向量化，避免重复劳动。</li>
-</ul>
-<h3 id="指令并行（ILP）"><a href="#指令并行（ILP）" class="headerlink" title="指令并行（ILP）"></a>指令并行（ILP）</h3><p><strong>指令级并行（ILP）</strong>：多条独立指令在同一时钟周期或重叠流水线周期内由不同硬件单元并行执行。</p>
-<p><strong>核心前提</strong>：指令间无数据依赖、控制依赖、资源依赖。</p>
-<p><strong>好处</strong>：</p>
-<ul>
-<li>压缩独立指令执行周期，满足实时性</li>
-<li>MAC、ALU、移位器同时工作，算力利用率从 30% 提升至 80% 以上</li>
-</ul>
-<p><strong>实现方式</strong>：</p>
-<table>
-<thead>
-<tr>
-<th>层面</th>
-<th>手段</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>硬件</td>
-<td>多级流水线、超标量多发射</td>
-</tr>
-<tr>
-<td>软件</td>
-<td>CCES 编译器依赖分析 + 指令重排；减少分支、避免同寄存器竞争、优先调用厂商库</td>
-</tr>
-</tbody></table>
-<h3 id="实践案例：浮点标量积优化"><a href="#实践案例：浮点标量积优化" class="headerlink" title="实践案例：浮点标量积优化"></a>实践案例：浮点标量积优化</h3><p>原始 C 代码：</p>
+<h4 id="SIMD（单指令多数据）"><a href="#SIMD（单指令多数据）" class="headerlink" title="SIMD（单指令多数据）"></a>SIMD（单指令多数据）</h4><p>SIMD 允许一条指令同时处理多组数据。SHARC 的 PEx 和 PEy 两套单元可在单条指令中完成两次并行运算。使用 SIMD 的前提是数据地址对齐，常用：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">aligned(ptr, <span class="number">2</span> * <span class="keyword">sizeof</span>(<span class="type">float</span>));</span><br></pre></td></tr></table></figure>
+
+<p>建议先开启 <code>-O2</code> 优化并查看生成的汇编，确认编译器是否已自动向量化，再考虑手写优化。</p>
+<h4 id="指令级并行（ILP）"><a href="#指令级并行（ILP）" class="headerlink" title="指令级并行（ILP）"></a>指令级并行（ILP）</h4><p>当多条指令之间无数据依赖时，处理器可在同一时钟周期或重叠的流水线阶段内并行执行它们。编译器会自动做依赖分析和指令重排；开发者应尽量减少循环内的分支、避免多条指令竞争同一寄存器。</p>
+<h3 id="4-6-编译器优化：标量积案例"><a href="#4-6-编译器优化：标量积案例" class="headerlink" title="4.6 编译器优化：标量积案例"></a>4.6 编译器优化：标量积案例</h3><p>以下是一个完整的优化案例，展示同一份 C 代码在不同优化等级下的 cycle 差异。</p>
+<p><strong>原始代码</strong>：</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;builtins.h&gt;</span></span></span><br><span class="line"><span class="type">float</span> <span class="title function_">sp</span><span class="params">(<span class="type">float</span> *a, <span class="type">float</span> *b)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> i;</span><br><span class="line">    <span class="type">float</span> sum = <span class="number">0</span>;</span><br><span class="line">    aligned(a, <span class="number">2</span> * <span class="keyword">sizeof</span>(<span class="type">float</span>));</span><br><span class="line">    aligned(b, <span class="number">2</span> * <span class="keyword">sizeof</span>(<span class="type">float</span>));</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; <span class="number">1024</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        sum += a[i] * b[i];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> sum;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p><strong>保守估计</strong>：每次循环约 8 cycle，共 $1024 \times 8 &#x3D; 8192$ cycle。</p>
-<p><strong>DSP 特性优化思路</strong>：</p>
-<table>
-<thead>
-<tr>
-<th>优化点</th>
-<th>效果</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>加法与乘法同时进行</td>
-<td>cycle -1</td>
-</tr>
-<tr>
-<td>数据访问 SIMD 并行</td>
-<td>cycle -1</td>
-</tr>
-<tr>
-<td>两套计算单元同时工作</td>
-<td>循环减半</td>
-</tr>
-<tr>
-<td>求和项保存在寄存器</td>
-<td>cycle -2</td>
-</tr>
-<tr>
-<td>硬件循环，无流水线停滞</td>
-<td>cycle -2</td>
-</tr>
-<tr>
-<td>访存与计算同时进行</td>
-<td>cycle -1</td>
-</tr>
-</tbody></table>
-<p><strong>优化目标</strong>：$1024&#x2F;2 \times (8-7) &#x3D; 512$ cycle</p>
+<p><strong>无优化时的 cycle 估算</strong>：每次循环约需 8 个 cycle（3 次访存 + 1 次写回 + 1 次乘法 + 1 次加法 + 2 次循环控制），共约 $1024 \times 8 &#x3D; 8192$ cycle。</p>
 <p><strong>编译器优化三阶段</strong>：</p>
 <table>
 <thead>
 <tr>
 <th>阶段</th>
-<th>循环指令数</th>
+<th>循环体指令数</th>
 <th>迭代次数</th>
-<th>特点</th>
+<th>关键技术</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>第一次（无优化）</td>
-<td>26 条（含 10 次流水线停滞）</td>
+<td>无优化</td>
+<td>26 条（含 10 次 stall）</td>
 <td>1024</td>
-<td>全部单操作</td>
+<td>字面翻译</td>
 </tr>
 <tr>
-<td>第二次（SIMD）</td>
+<td>SIMD + 硬件循环</td>
 <td>2 条</td>
 <td>510</td>
-<td>指令并行</td>
+<td><code>lcntr</code>、乘加并行</td>
 </tr>
 <tr>
-<td>第三次（双总线）</td>
+<td>双总线</td>
 <td>2 条</td>
 <td>254</td>
-<td>DM+PM 同时取数</td>
+<td>DM 与 PM 同时取数</td>
 </tr>
 </tbody></table>
-<h4 id="优化过程解读"><a href="#优化过程解读" class="headerlink" title="优化过程解读"></a>优化过程解读</h4><p><strong>第一次（无优化）</strong>：编译器按字面翻译 C 循环，每次迭代独立取数、乘法、加法、写回，循环控制（自增、比较、跳转）引入大量流水线气泡（stall）。这是性能基线。</p>
-<p><strong>第二次（SIMD + 硬件循环）</strong>：开启优化后，编译器识别出循环计数固定、无跨迭代依赖，于是：</p>
+<p><strong>解读</strong>：</p>
 <ul>
-<li>用 <code>lcntr</code> 硬件循环寄存器替代软件跳转，消除分支惩罚</li>
-<li>单条指令内并行执行 <code>f8=f2*f4</code>（乘）与 <code>f12=f8+f12</code>（加）</li>
-<li>每次处理 2 个 float，迭代次数减半至 510</li>
+<li>第一次：编译器逐行翻译循环，循环控制引入大量流水线气泡；</li>
+<li>第二次：启用硬件循环寄存器消除分支惩罚，单条指令内并行完成乘法与加法，每次处理 2 个 float；</li>
+<li>第三次：利用 PM 和 DM 双总线同时取操作数，迭代次数再减半。</li>
 </ul>
-<p><strong>第三次（双总线）</strong>：SHARC 的 PM 总线和 DM 总线可同时访问。优化后一条指令同时从 <code>dm(i4,m4)</code> 和 <code>pm(i12,m12)</code> 取操作数，迭代次数再减半至 254。</p>
-<p>这个案例说明：<strong>同一份 C 代码，优化等级和编译器对硬件特性的利用，可带来数量级的 cycle 差异</strong>。性能调优应先看汇编，再决定是否手写 intrinsics。</p>
-<h4 id="常见性能瓶颈排查顺序"><a href="#常见性能瓶颈排查顺序" class="headerlink" title="常见性能瓶颈排查顺序"></a>常见性能瓶颈排查顺序</h4><ol>
-<li>循环内是否有片外 RAM 访问？→ 搬到 L1&#x2F;L2</li>
-<li>是否存在数据依赖导致 ILP 失败？→ 重构循环、展开</li>
-<li>是否可用 DMA 重叠传输与计算？→ 乒乓缓冲</li>
-<li>是否可用 FIR&#x2F;IIR 加速器？→ 评估 MIPS 收益与帧延迟</li>
-<li>定点是否用除法&#x2F;开方？→ 查表或移位替代</li>
-</ol>
-<hr>
-<h2 id="DSP-开发提升"><a href="#DSP-开发提升" class="headerlink" title="DSP 开发提升"></a>DSP 开发提升</h2><h3 id="代码规范"><a href="#代码规范" class="headerlink" title="代码规范"></a>代码规范</h3><h4 id="为何重视规范"><a href="#为何重视规范" class="headerlink" title="为何重视规范"></a>为何重视规范</h4><p>程序员约 <strong>67%</strong> 的时间花在开发维护（阅读与修复）上。规范直接影响长期生产力。</p>
-<p><strong>五大价值</strong>：</p>
-<table>
-<thead>
-<tr>
-<th>维度</th>
-<th>收益</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>高效率</td>
-<td>避免 1 小时任务拖成数天</td>
-</tr>
-<tr>
-<td>可读性</td>
-<td>开发周期缩短 15<del>30%，调试时间减少 40</del>60%</td>
-</tr>
-<tr>
-<td>可协作</td>
-<td>新人适应期缩短 50%，沟通效率提升 30~50%</td>
-</tr>
-<tr>
-<td>可维护</td>
-<td>维护成本减少 50<del>80%，修 bug 时间缩短 60</del>90%</td>
-</tr>
-<tr>
-<td>高质量</td>
-<td>生产 bug 减少 30<del>70%，崩溃率降低 50</del>80%</td>
-</tr>
-</tbody></table>
-<h3 id="代码-5S-方法论"><a href="#代码-5S-方法论" class="headerlink" title="代码 5S 方法论"></a>代码 5S 方法论</h3><table>
-<thead>
-<tr>
-<th>5S</th>
-<th>含义</th>
-<th>核心</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>整理 Seiri</td>
-<td>区分必要&#x2F;不必要</td>
-<td>删除无效代码、调试残留、过期注释、僵尸分支</td>
-</tr>
-<tr>
-<td>整顿 Seiton</td>
-<td>规范结构</td>
-<td>统一目录、命名、头文件保护、分支策略、clang-format</td>
-</tr>
-<tr>
-<td>清扫 Seiso</td>
-<td>持续优化质量</td>
-<td>静态分析（cppcheck&#x2F;clang-tidy）、性能清扫、定期 code review</td>
-</tr>
-<tr>
-<td>清洁 Seiketsu</td>
-<td>固化成果</td>
-<td>编写规范手册、工具链自动化、流程固化</td>
-</tr>
-<tr>
-<td>素养 Shitsuke</td>
-<td>培养习惯</td>
-<td>培训考核、技术分享、规范标兵、全员参与</td>
-</tr>
-</tbody></table>
-<p><strong>工具支持</strong>：</p>
-<ul>
-<li>静态分析：<code>clang-tidy</code>、<code>cppcheck</code>、MISRA-C</li>
-<li>格式化：<code>clang-format</code>（4 空格缩进）</li>
-<li>版本控制：Git Hooks（pre-commit 自动格式化）</li>
-<li>性能分析：CCES 调试工具</li>
-</ul>
-<h3 id="初版规范实例"><a href="#初版规范实例" class="headerlink" title="初版规范实例"></a>初版规范实例</h3><h4 id="命名规范"><a href="#命名规范" class="headerlink" title="命名规范"></a>命名规范</h4><p><strong>核心原则</strong>：语义清晰、格式统一、模块区分、无歧义。禁止单字符标识符（<code>i</code>&#x2F;<code>j</code>&#x2F;<code>k</code> 循环变量除外）。</p>
-<p><strong>变量命名</strong>：首字母大写 + 下划线，<code>[模块+用途]</code></p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> Temp_Data = <span class="number">0</span>;      <span class="comment">// 临时数据</span></span><br><span class="line"><span class="type">uint8_t</span> Temp_Read_Val;  <span class="comment">// 临时读取值</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>全局变量</strong>：<code>G_</code> 前缀</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">extern</span> <span class="type">int</span> G_Uart_Rx_Buf_Len = <span class="number">1024</span>;</span><br><span class="line"><span class="keyword">extern</span> <span class="type">int</span> G_Gpio_Led_State = <span class="number">0</span>;</span><br></pre></td></tr></table></figure>
-
-<p><strong>静态变量</strong>：<code>S_</code> 前缀</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="type">int</span> S_Uart_Send_Cnt = <span class="number">0</span>;           <span class="comment">// 全局静态</span></span><br><span class="line"><span class="type">static</span> <span class="type">int</span> S_Send_Cnt = <span class="number">0</span>;                <span class="comment">// 局部静态（函数内）</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>布尔变量</strong>：<code>Is_</code> &#x2F; <code>Has_</code> 前缀</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">bool</span> Is_Uart_Busy = <span class="literal">true</span>;</span><br><span class="line"><span class="type">bool</span> Has_Flash_Error = <span class="literal">false</span>;</span><br></pre></td></tr></table></figure>
-
-<p><strong>全局函数</strong>：<code>模块前缀_动词_名词</code></p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">Uart_Init</span><span class="params">(<span class="type">void</span>)</span>;</span><br><span class="line"><span class="type">int</span> <span class="title function_">Uart_Send_Data</span><span class="params">(<span class="type">char</span> *P_Buf, <span class="type">int</span> Len)</span>;</span><br></pre></td></tr></table></figure>
-
-<p><strong>私有函数</strong>：<code>_</code> 前缀</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="type">void</span> _Uart_Check_Parity(<span class="type">void</span>);</span><br><span class="line"><span class="type">static</span> <span class="type">int</span> _Flash_Verify_Crc(<span class="type">uint32_t</span> Data, <span class="type">uint8_t</span> Crc);</span><br></pre></td></tr></table></figure>
-
-<p><strong>布尔函数</strong>：<code>模块前缀_Is/Has_名词</code></p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">bool</span> <span class="title function_">Uart_Is_Busy</span><span class="params">(<span class="type">void</span>)</span>;</span><br><span class="line"><span class="type">bool</span> <span class="title function_">Flash_Has_Error</span><span class="params">(<span class="type">void</span>)</span>;</span><br></pre></td></tr></table></figure>
-
-<h4 id="排版规范"><a href="#排版规范" class="headerlink" title="排版规范"></a>排版规范</h4><ul>
-<li><strong>缩进</strong>：统一 4 空格，禁止 Tab</li>
-<li><strong>运算符</strong>：前后加 1 空格；逗号&#x2F;分号后加 1 空格</li>
-<li><strong>括号</strong>：函数名与 <code>(</code> 之间无空格</li>
-<li><strong>大括号</strong>：左括号单独一行，右括号单独一行，与关键字左对齐；单行语句也必须加大括号</li>
-<li><strong>一行一句</strong>：禁止多语句同行</li>
-<li><strong>行长度</strong>：不超过 80 字符，超长参数每个参数单独一行</li>
-</ul>
-<h4 id="注释规范"><a href="#注释规范" class="headerlink" title="注释规范"></a>注释规范</h4><p><strong>必须注释</strong>：文件头、函数&#x2F;接口、结构体&#x2F;枚举、复杂逻辑、宏定义、临界区。</p>
-<p><strong>禁止注释</strong>：冗余、错误、过时注释；注释屏蔽代码（应直接删除）。</p>
-<p><strong>文件头模板</strong>：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/******************************************************************</span></span><br><span class="line"><span class="comment"> * @file    uart.c</span></span><br><span class="line"><span class="comment"> * @brief   串口驱动模块实现文件 (UART1)</span></span><br><span class="line"><span class="comment"> * @author  张三</span></span><br><span class="line"><span class="comment"> * @date    2025-12-31</span></span><br><span class="line"><span class="comment"> * @version V1.0.0</span></span><br><span class="line"><span class="comment"> * @note    1. 适配 MCU: STM32F103C8T6</span></span><br><span class="line"><span class="comment"> *          2. 波特率默认 115200</span></span><br><span class="line"><span class="comment"> ******************************************************************/</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="函数规范"><a href="#函数规范" class="headerlink" title="函数规范"></a>函数规范</h4><ul>
-<li>单个函数有效代码行（含注释、空行）<strong>不超过 100 行</strong></li>
-<li>超过则按功能模块拆分为多个私有函数</li>
-<li>每个函数仅承担单一职责</li>
-<li>不追求一次实现所有规范，持续迭代提升代码质量</li>
-</ul>
-<h3 id="架构设计"><a href="#架构设计" class="headerlink" title="架构设计"></a>架构设计</h3><h4 id="为何架构设计是基本功"><a href="#为何架构设计是基本功" class="headerlink" title="为何架构设计是基本功"></a>为何架构设计是基本功</h4><p>DSP 开发面向实时信号处理、硬件强耦合、资源高度受限场景，架构设计是保障项目可落地、可维护、可优化的基础。</p>
-<table>
-<thead>
-<tr>
-<th>维度</th>
-<th>无架构的风险</th>
-<th>有架构的收益</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>实时性</td>
-<td>中断嵌套、优先级反转、数据竞争</td>
-<td>预先规划任务优先级、DMA&#x2F;CPU 分工</td>
-</tr>
-<tr>
-<td>资源利用</td>
-<td>内存碎片、算力浪费</td>
-<td>预划分内存、规划算力分配</td>
-</tr>
-<tr>
-<td>维护成本</td>
-<td>算法与驱动混杂，难以定位</td>
-<td>高内聚低耦合，算法模块可独立调试替换</td>
-</tr>
-<tr>
-<td>团队协作</td>
-<td>代码风格混乱、模块冲突</td>
-<td>明确边界与接口，支持并行开发</td>
-</tr>
-</tbody></table>
-<h4 id="算法工程师如何主导架构"><a href="#算法工程师如何主导架构" class="headerlink" title="算法工程师如何主导架构"></a>算法工程师如何主导架构</h4><p><strong>三条核心原则</strong>：</p>
+<p><strong>性能瓶颈排查顺序</strong>：</p>
 <ol>
-<li><strong>量化核心指标</strong>：将延迟、吞吐量、精度、算力、内存带宽、功耗拆解到模块&#x2F;指令&#x2F;内存级，定义性能契约。</li>
-<li><strong>系统适配算法</strong>：按计算&#x2F;访存&#x2F;控制密集型拆分，设计乒乓 Buffer 与内存分层（L1 热点、L2 中间、DDR 原始&#x2F;结果）。</li>
-<li><strong>全链路闭环验证</strong>：MATLAB 原型 → DSP 仿真器周期级验证 → 实机端到端测试 → 迭代优化。</li>
+<li>循环内是否访问片外 RAM？→ 搬到片内；</li>
+<li>是否存在数据依赖阻碍 ILP？→ 重构循环；</li>
+<li>能否用 DMA 重叠传输与计算？→ 乒乓缓冲；</li>
+<li>能否启用 FIR&#x2F;IIR 硬件加速器？→ 评估收益与延迟；</li>
+<li>定点运算是否使用了除法？→ 改用移位或查表。</li>
 </ol>
-<h4 id="推荐软件分层"><a href="#推荐软件分层" class="headerlink" title="推荐软件分层"></a>推荐软件分层</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">┌─────────────────────────────────────┐</span><br><span class="line">│  应用层：业务逻辑、参数管理、状态机    │</span><br><span class="line">├─────────────────────────────────────┤</span><br><span class="line">│  算法层：FFT / 滤波 / 特征提取（纯计算）│</span><br><span class="line">├─────────────────────────────────────┤</span><br><span class="line">│  驱动层：SPORT / SPI / DMA / Timer     │</span><br><span class="line">├─────────────────────────────────────┤</span><br><span class="line">│  BSP：时钟、引脚、中断向量、Link 配置   │</span><br><span class="line">└─────────────────────────────────────┘</span><br></pre></td></tr></table></figure>
+<h3 id="本章小结-3"><a href="#本章小结-3" class="headerlink" title="本章小结"></a>本章小结</h3><p>第四章是全书的技术核心。初学者不必一次记住所有细节，但应建立「存储层次决定访存速度、总线决定数据吞吐、SIMD&#x2F;ILP 决定算力利用率」的整体图景，在遇到性能问题时知道从哪个方向排查。</p>
+<hr>
+<h2 id="第五章-工程化实践"><a href="#第五章-工程化实践" class="headerlink" title="第五章 工程化实践"></a>第五章 工程化实践</h2><h3 id="5-1-代码规范"><a href="#5-1-代码规范" class="headerlink" title="5.1 代码规范"></a>5.1 代码规范</h3><p>研究表明，程序员约 67% 的工作时间花在阅读和维护已有代码上。规范的代码不是形式主义，而是降低未来自己和同事调试成本的有效手段。</p>
+<p><strong>规范带来的直接收益</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>方面</th>
+<th>效果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>可读性</td>
+<td>缩短代码审查和 bug 定位时间</td>
+</tr>
+<tr>
+<td>可维护性</td>
+<td>降低修改引入新问题的概率</td>
+</tr>
+<tr>
+<td>可协作性</td>
+<td>新成员更快理解模块逻辑</td>
+</tr>
+</tbody></table>
+<h4 id="命名规范"><a href="#命名规范" class="headerlink" title="命名规范"></a>命名规范</h4><p>核心原则：语义清晰、格式统一、模块可区分。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 局部变量：模块 + 用途，首字母大写</span></span><br><span class="line"><span class="type">int</span> Temp_Sample_Cnt = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 全局变量：G_ 前缀</span></span><br><span class="line"><span class="type">int</span> G_Fft_Buf_Len = <span class="number">1024</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 静态变量：S_ 前缀</span></span><br><span class="line"><span class="type">static</span> <span class="type">int</span> S_Frame_Idx = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 布尔变量：Is_ / Has_ 前缀</span></span><br><span class="line"><span class="type">bool</span> Is_Dma_Busy = <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 全局函数：模块_动词_名词</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">Fft_Init</span><span class="params">(<span class="type">void</span>)</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 文件内私有函数：_ 前缀</span></span><br><span class="line"><span class="type">static</span> <span class="type">void</span> _Fft_Apply_Window(<span class="type">void</span>);</span><br></pre></td></tr></table></figure>
 
-<p>算法层应尽量与具体外设解耦：输入输出通过统一的数据结构（如 <code>AudioFrame_t</code>）传递，方便单独做 AIL 验证，也方便替换采样前端。</p>
-<p><strong>性能契约示例</strong>（端到端 10 ms 帧长）：</p>
+<h4 id="排版与注释"><a href="#排版与注释" class="headerlink" title="排版与注释"></a>排版与注释</h4><ul>
+<li>缩进统一 4 空格，不使用 Tab；</li>
+<li>运算符两侧加空格，大括号独占一行；</li>
+<li>每行一条语句，函数不超过 100 行有效代码；</li>
+<li>文件头注明模块功能、版本和依赖；函数头注明参数含义与返回值。</li>
+</ul>
+<h4 id="代码质量维护"><a href="#代码质量维护" class="headerlink" title="代码质量维护"></a>代码质量维护</h4><p>建议养成以下习惯：</p>
+<ul>
+<li>删除未使用的变量、函数和过期注释，不保留大段注释掉的代码；</li>
+<li>提交前运行静态分析工具（<code>cppcheck</code>、<code>clang-tidy</code>）；</li>
+<li>用 <code>clang-format</code> 统一格式；</li>
+<li>定期做 code review，把规范检查纳入日常流程。</li>
+</ul>
+<h3 id="5-2-架构设计"><a href="#5-2-架构设计" class="headerlink" title="5.2 架构设计"></a>5.2 架构设计</h3><h4 id="为何需要架构设计"><a href="#为何需要架构设计" class="headerlink" title="为何需要架构设计"></a>为何需要架构设计</h4><p>DSP 系统面向实时信号处理，硬件强耦合、资源受限。缺乏架构设计时，常见问题包括：中断嵌套导致时延不可控、算法与驱动代码混杂难以维护、模块之间接口不清导致协作困难。</p>
+<h4 id="推荐软件分层"><a href="#推荐软件分层" class="headerlink" title="推荐软件分层"></a>推荐软件分层</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">┌─────────────────────────────────────┐</span><br><span class="line">│  应用层：参数管理、状态机、业务流程    │</span><br><span class="line">├─────────────────────────────────────┤</span><br><span class="line">│  算法层：FFT / 滤波 / 特征提取        │</span><br><span class="line">├─────────────────────────────────────┤</span><br><span class="line">│  驱动层：SPORT / SPI / DMA / Timer    │</span><br><span class="line">├─────────────────────────────────────┤</span><br><span class="line">│  BSP：时钟、引脚、中断、Link 配置     │</span><br><span class="line">└─────────────────────────────────────┘</span><br></pre></td></tr></table></figure>
+
+<p>算法层应与具体外设解耦，通过统一的数据结构（如 <code>AudioFrame_t</code>）接收输入和返回输出，便于独立做 AIL 验证。</p>
+<h4 id="性能预算"><a href="#性能预算" class="headerlink" title="性能预算"></a>性能预算</h4><p>在架构设计阶段，应为每个模块分配时延和内存预算。例如帧长 10 ms 的音频处理：</p>
 <table>
 <thead>
 <tr>
 <th>模块</th>
-<th>预算时延</th>
-<th>预算内存</th>
+<th>时延预算</th>
+<th>内存预算</th>
 </tr>
 </thead>
 <tbody><tr>
 <td>ADC + DMA 采集</td>
 <td>0.5 ms</td>
-<td>4 KB 乒乓缓冲</td>
+<td>4 KB</td>
 </tr>
 <tr>
-<td>预处理（窗函数&#x2F;去直流）</td>
+<td>预处理</td>
 <td>1.0 ms</td>
 <td>2 KB</td>
 </tr>
 <tr>
-<td>核心算法（FFT + 特征）</td>
+<td>核心算法</td>
 <td>6.0 ms</td>
 <td>16 KB</td>
 </tr>
 <tr>
-<td>后处理 + 输出编码</td>
+<td>后处理 + 输出</td>
 <td>1.5 ms</td>
 <td>2 KB</td>
 </tr>
@@ -1200,117 +871,58 @@
 <td>—</td>
 </tr>
 </tbody></table>
-<p>各模块超标时，优先在算法层内优化，而不是压缩驱动层或随意提高中断优先级。</p>
-<h4 id="架构帮手"><a href="#架构帮手" class="headerlink" title="架构帮手"></a>架构帮手</h4><p><strong>DMA（直接存储器访问）</strong></p>
-<p>脱离 CPU 独立完成数据传输，在外设、片内 RAM、片外存储器之间直接搬运数据。</p>
-<ul>
-<li>释放算力，CPU 专注核心运算</li>
-<li>流水线作业：DMA 搬第 N 帧时，CPU 运算第 N-1 帧</li>
-<li>充分利用内存带宽</li>
-</ul>
-<p><strong>典型 DMA 使用场景</strong>：</p>
+<p>某模块超标时，优先在算法层内优化，而不是随意提高中断优先级或压缩驱动层时间。</p>
+<h4 id="DMA-与硬件加速器"><a href="#DMA-与硬件加速器" class="headerlink" title="DMA 与硬件加速器"></a>DMA 与硬件加速器</h4><p><strong>DMA（直接存储器访问）</strong> 可在不占用 CPU 的情况下完成数据传输，典型用途包括：</p>
 <table>
 <thead>
 <tr>
 <th>场景</th>
-<th>传输方向</th>
-<th>收益</th>
+<th>方向</th>
+<th>作用</th>
 </tr>
 </thead>
 <tbody><tr>
 <td>音频采样</td>
-<td>外设 → L1 缓冲</td>
-<td>CPU 不阻塞等待 SPORT</td>
+<td>外设 → L1</td>
+<td>CPU 无需等待数据就绪</td>
 </tr>
 <tr>
 <td>算法输出</td>
 <td>L1 → DDR</td>
-<td>避免 CPU 写慢速片外存储</td>
+<td>避免 CPU 写慢速存储</td>
 </tr>
 <tr>
 <td>系数更新</td>
 <td>DDR → L1</td>
-<td>后台更新滤波器系数</td>
-</tr>
-<tr>
-<td>2D 交织</td>
-<td>线性缓冲 → 交织格式</td>
-<td>硬件完成通道排列</td>
+<td>后台加载新系数</td>
 </tr>
 </tbody></table>
-<p>配置 DMA 时注意：源&#x2F;目的地址对齐、传输长度与中断回调时机。DMA 完成中断里只做「置标志 &#x2F; 释放信号量」，不做浮点运算。</p>
-<p><strong>硬件加速器（FIR&#x2F;IIR）</strong></p>
-<p>DSP 内置专用 MAC 硬件单元，可独立完成多抽头、多通道滤波，与 CPU 并行运行。</p>
-<table>
-<thead>
-<tr>
-<th>使用模型</th>
-<th>内核 MIPS</th>
-<th>节约内核 MIPS</th>
-<th>延迟</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>仅内核</td>
-<td>337</td>
-<td>0</td>
-<td>0</td>
-</tr>
-<tr>
-<td>直接替代</td>
-<td>239</td>
-<td>98</td>
-<td>0</td>
-</tr>
-<tr>
-<td>拆分任务</td>
-<td>148</td>
-<td>189</td>
-<td>0</td>
-</tr>
-<tr>
-<td>数据流水线</td>
-<td>2</td>
-<td>335</td>
-<td>5.33ms（1 帧）</td>
-</tr>
-</tbody></table>
-<p><strong>Cycle 统计分析</strong></p>
-<p>$$\text{实际执行时间} &#x3D; \text{执行 cycle 数} \times \text{DSP 时钟周期}$$</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cycles.h&gt;</span></span></span><br><span class="line"><span class="type">cycle_stats_t</span> stats;</span><br><span class="line">CYCLES_INIT(stats);</span><br><span class="line">CYCLES_START(stats);</span><br><span class="line">foo();</span><br><span class="line">CYCLES_STOP(stats);</span><br><span class="line">CYCLES_PRINT(stats);</span><br></pre></td></tr></table></figure>
+<p>DMA 完成中断中只做标志置位，不执行浮点运算。</p>
+<p><strong>硬件加速器（FIR&#x2F;IIR）</strong> 可独立于 CPU 完成滤波运算。根据使用方式不同，CPU 负载差异显著：仅内核实现约需 337 MIPS，而数据流水线模式可降至 2 MIPS（代价是增加一帧延迟）。选用哪种模式，取决于实时性与算力的权衡。</p>
+<h4 id="Cycle-统计"><a href="#Cycle-统计" class="headerlink" title="Cycle 统计"></a>Cycle 统计</h4><p>$$\text{执行时间} &#x3D; \text{cycle 数} \times \text{时钟周期}$$</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cycles.h&gt;</span></span></span><br><span class="line"><span class="type">cycle_stats_t</span> stats;</span><br><span class="line">CYCLES_INIT(stats);</span><br><span class="line">CYCLES_START(stats);</span><br><span class="line">My_Algorithm();</span><br><span class="line">CYCLES_STOP(stats);</span><br><span class="line">CYCLES_PRINT(stats);</span><br></pre></td></tr></table></figure>
 
-<p><code>cycles.h</code> 输出示例：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">AVG   : 25454</span><br><span class="line">MIN   : 23003   MAX : 26295</span><br><span class="line">CALLS : 16</span><br></pre></td></tr></table></figure>
-
-<p>关注 <strong>AVG 与 MAX 的差距</strong>：若 MAX 远大于 AVG，说明存在缓存未命中、中断抢占或偶发片外访问等不稳定因素，这类问题在实时系统里比平均性能更危险。</p>
-<h3 id="知识拓展"><a href="#知识拓展" class="headerlink" title="知识拓展"></a>知识拓展</h3><h4 id="中断"><a href="#中断" class="headerlink" title="中断"></a>中断</h4><p>中断是 DSP 异步事件响应机制：外设或软件触发事件时，CPU 暂停当前任务执行 ISR，完成后返回。</p>
-<p><strong>设计原则</strong>：</p>
+<p>关注 AVG 与 MAX 的差距：若 MAX 远大于 AVG，说明存在不稳定因素（缓存未命中、中断抢占、偶发片外访问），这在实时系统中比平均性能更值得关注。</p>
+<h3 id="5-3-中断、RTOS-与缓冲机制"><a href="#5-3-中断、RTOS-与缓冲机制" class="headerlink" title="5.3 中断、RTOS 与缓冲机制"></a>5.3 中断、RTOS 与缓冲机制</h3><h4 id="中断设计原则"><a href="#中断设计原则" class="headerlink" title="中断设计原则"></a>中断设计原则</h4><p>中断是 DSP 响应外设事件（采样完成、DMA 传输结束等）的机制。设计中断服务程序（ISR）时遵循：</p>
 <ul>
-<li>按实时性划分优先级：故障 &gt; 采集&#x2F;传输 &gt; 通信&#x2F;日志</li>
-<li>ISR 短小精悍，只做状态标记，<strong>严禁执行复杂算法</strong></li>
-<li>禁止 <code>malloc</code>、阻塞函数</li>
-<li>用信号量&#x2F;事件标志衔接 ISR 与后台算法任务</li>
-<li>环形缓冲区避免数据竞争</li>
+<li>按实时性划分优先级：故障 &gt; 数据采集 &gt; 通信日志；</li>
+<li>ISR 内只做标志置位或缓冲区切换，<strong>不执行 FFT 等复杂运算</strong>；</li>
+<li>不使用 <code>malloc</code> 等可能阻塞的操作；</li>
+<li>通过信号量或事件标志通知后台任务处理数据。</li>
 </ul>
-<p><strong>ISR 模板（伪代码）</strong>：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">Dma_Rx_Isr</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (G_Active_Buf_Idx == <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        G_Frame_Ready_Flags |= BUF_A_READY;</span><br><span class="line">        G_Active_Buf_Idx = <span class="number">1</span>;</span><br><span class="line">        <span class="comment">// 启动下一块 DMA 到 Buffer B</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        G_Frame_Ready_Flags |= BUF_B_READY;</span><br><span class="line">        G_Active_Buf_Idx = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 通知后台任务，不在 ISR 内做 FFT</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">Dma_Rx_Isr</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (G_Active_Buf == <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        G_Buf_A_Ready = <span class="number">1</span>;</span><br><span class="line">        G_Active_Buf = <span class="number">1</span>;</span><br><span class="line">        <span class="comment">/* 启动下一块 DMA 写入 Buffer B */</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        G_Buf_B_Ready = <span class="number">1</span>;</span><br><span class="line">        G_Active_Buf = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h4 id="RTOS-调度"><a href="#RTOS-调度" class="headerlink" title="RTOS 调度"></a>RTOS 调度</h4><ul>
-<li><strong>抢占式调度</strong>：高优先级任务可立即抢占低优先级任务</li>
-<li><strong>时间片轮转</strong>：同优先级任务按 System Tick 轮流执行</li>
-</ul>
-<p><strong>任务状态</strong>：就绪态 ↔ 运行态 ↔ 阻塞态 ↔ 挂起态</p>
-<h4 id="乒乓-Buffer"><a href="#乒乓-Buffer" class="headerlink" title="乒乓 Buffer"></a>乒乓 Buffer</h4><p>两个等大小缓冲区交替填充与播放，实现数据填充与 DMA 传输并行：</p>
+<h4 id="乒乓缓冲"><a href="#乒乓缓冲" class="headerlink" title="乒乓缓冲"></a>乒乓缓冲</h4><p>当数据填充（DMA 写入）与数据处理（算法运算）需要并行时，使用两个等大小的缓冲区交替工作：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">时间:  |---- T0 ----|---- T1 ----|---- T2 ----|</span><br><span class="line">Buf A: [ DMA 写入  ] [ 算法处理  ] [ DMA 写入  ]</span><br><span class="line">Buf B: [ 算法处理  ] [ DMA 写入  ] [ 算法处理  ]</span><br></pre></td></tr></table></figure>
+
+<p>缓冲区大小至少为 $2 \times N$（$N$ 为每帧采样点数）。若算法处理时间接近帧长，应增大缓冲或减小帧长，否则会发生数据覆盖。</p>
+<h4 id="RTOS-基本概念"><a href="#RTOS-基本概念" class="headerlink" title="RTOS 基本概念"></a>RTOS 基本概念</h4><p>部分 DSP 项目使用 RTOS 管理多任务。需了解：</p>
 <ul>
-<li>消除单缓冲区的「填充-播放」时序冲突</li>
-<li>给算法处理留出充足时间</li>
-<li>切换由 DMA 中断触发，降低 CPU 轮询负担</li>
+<li><strong>抢占式调度</strong>：高优先级任务可打断低优先级任务；</li>
+<li><strong>时间片轮转</strong>：同优先级任务按时钟节拍轮流执行；</li>
+<li><strong>任务状态</strong>：就绪、运行、阻塞、挂起之间的转换。</li>
 </ul>
-<p>工作时序如下：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">时间轴:  |---- T0 ----|---- T1 ----|---- T2 ----|</span><br><span class="line">Ping:    [ DMA 写入  ] [ 算法处理  ] [ DMA 写入  ]</span><br><span class="line">Pong:    [ 算法处理  ] [ DMA 写入  ] [ 算法处理  ]</span><br></pre></td></tr></table></figure>
-
-<p>Buffer 大小选取：设采样率为 $f_s$，帧长为 $N$，至少需要 $2 \times N$ 个采样点的缓冲（乒乓各一块）。若算法处理时间接近帧长，需增大缓冲或降低 $N$，否则来不及切换就会断流。</p>
-<h4 id="性能参数"><a href="#性能参数" class="headerlink" title="性能参数"></a>性能参数</h4><table>
+<h3 id="5-4-性能参数估算"><a href="#5-4-性能参数估算" class="headerlink" title="5.4 性能参数估算"></a>5.4 性能参数估算</h3><table>
 <thead>
 <tr>
 <th>指标</th>
@@ -1318,63 +930,56 @@
 </tr>
 </thead>
 <tbody><tr>
-<td>GFLOPS</td>
-<td>每秒十亿次浮点运算</td>
+<td>MIPS</td>
+<td>每秒百万条指令，衡量通用执行速度</td>
 </tr>
 <tr>
 <td>GMAC</td>
-<td>每秒十亿次乘加运算（AI&#x2F;DSP 核心指标）</td>
+<td>每秒十亿次乘加，信号处理核心指标</td>
 </tr>
 <tr>
-<td>MIPS</td>
-<td>每秒百万条指令</td>
+<td>GFLOPS</td>
+<td>每秒十亿次浮点运算</td>
 </tr>
 </tbody></table>
-<p><strong>ADSP-21569 换算示例</strong>（32 位浮点）：</p>
-<ul>
-<li>MIPS &#x3D; 1000M（基准）</li>
-<li>MAC &#x3D; 2G &#x3D; 1000M × 2（双计算单元 + SIMD）≈ 4 GFLOPS</li>
-<li>FLOPS &#x3D; 6G &#x3D; (1000M × 2 MAC + 1000M ALU) × 2</li>
-</ul>
-<p><strong>估算公式</strong>：</p>
-<p>$$\text{所需 MIPS} \approx \frac{\text{每帧 MAC 次数} \times f_s &#x2F; N_{frame}}{\text{10}^6}$$</p>
-<p>例如每帧 48k 次 MAC、帧长 10 ms（即每秒 100 帧）：</p>
-<p>$$\text{MAC&#x2F;s} &#x3D; 48000 \times 100 &#x3D; 4.8 \times 10^6$$</p>
-<p>若每次 MAC 约 1 cycle，则约需 4.8 MIPS 的乘法算力，尚未计入数据搬运和分支开销。实际项目应留 30%~50% 余量。</p>
-<h3 id="推荐资料"><a href="#推荐资料" class="headerlink" title="推荐资料"></a>推荐资料</h3><p><strong>书籍</strong>：</p>
+<p>以 ADSP-21569 为例（32 位浮点）：1000 MIPS 基准下，双计算单元 + SIMD 可达约 2 GMAC（≈ 4 GFLOPS）。</p>
+<p>估算所需算力：</p>
+<p>$$\text{所需 MAC&#x2F;s} \approx \text{每帧 MAC 次数} \times \frac{f_s}{N_{frame}}$$</p>
+<p>实际项目应在此基础上留 30%~50% 余量，以应对中断开销和数据搬运。</p>
+<h3 id="本章小结-4"><a href="#本章小结-4" class="headerlink" title="本章小结"></a>本章小结</h3><p>工程化实践是将「能跑的代码」提升为「可量产的代码」。规范降低维护成本，架构设计保障实时性与可扩展性，DMA 和加速器是性能优化的重要手段。</p>
+<hr>
+<h2 id="第六章-附录"><a href="#第六章-附录" class="headerlink" title="第六章 附录"></a>第六章 附录</h2><h3 id="6-1-推荐阅读"><a href="#6-1-推荐阅读" class="headerlink" title="6.1 推荐阅读"></a>6.1 推荐阅读</h3><p><strong>通用基础</strong>：</p>
 <ol>
 <li>K.N. King.《C 语言程序设计：现代方法（第 2 版）》</li>
-<li>布莱恩特 R E, 奥哈拉伦 D R.《深入理解计算机系统（第 3 版）》</li>
+<li>布莱恩特, 奥哈拉伦.《深入理解计算机系统（第 3 版）》</li>
 <li>罗伯特·C.马丁.《代码整洁之道》</li>
 </ol>
-<p><strong>SHARC+ 技术手册</strong>：</p>
+<p><strong>ADI SHARC+ 手册</strong>：</p>
 <ul>
 <li>SHARC+ Core Programming Reference</li>
 <li>Run-Time Library Manual for SHARC+ Processor</li>
 <li>C and C++ Compiler Manual for SHARC+</li>
-<li>ADSP-2159x ADSP-SC592&#x2F;594 SHARC+ Processor Hardware Reference</li>
-<li>EE-375 Migrating Legacy SHARC to ADSP-SC58x&#x2F;2158x SHARC+ Processors</li>
+<li>ADSP-2159x &#x2F; ADSP-SC592&#x2F;594 Hardware Reference</li>
+<li>EE-375: Migrating Legacy SHARC to SHARC+ Processors</li>
 </ul>
-<hr>
-<h2 id="回顾与总结"><a href="#回顾与总结" class="headerlink" title="回顾与总结"></a>回顾与总结</h2><ol>
-<li>DSP 知识碎片化，按项目需求逐步深入，以实践驱动学习。</li>
-<li>从全局视角设计架构，量化性能指标并持续优化。</li>
-<li>遵守代码规范，降低维护与协作成本。</li>
-<li>掌握硬件基础概念（总线、存储、中断、DMA），提升跨角色沟通效率。</li>
-<li>明确模块边界与接口，支持团队并行开发。</li>
-</ol>
-<h3 id="上手检查清单"><a href="#上手检查清单" class="headerlink" title="上手检查清单"></a>上手检查清单</h3><p>开始一个新算法移植任务前，可逐项确认：</p>
+<h3 id="6-2-新项目上手检查清单"><a href="#6-2-新项目上手检查清单" class="headerlink" title="6.2 新项目上手检查清单"></a>6.2 新项目上手检查清单</h3><p>开始一个算法移植任务前，逐项确认：</p>
 <ul>
-<li><input disabled="" type="checkbox"> 算法文档已明确输入&#x2F;输出格式、采样率、帧长、精度指标</li>
-<li><input disabled="" type="checkbox"> MATLAB 黄金数据已导出，对比脚本就绪</li>
+<li><input disabled="" type="checkbox"> 算法文档已明确输入&#x2F;输出格式、采样率、帧长和精度指标</li>
+<li><input disabled="" type="checkbox"> MATLAB 黄金数据已导出，对比脚本已就绪</li>
 <li><input disabled="" type="checkbox"> 目标 DSP 型号、片内 RAM 容量、是否带 FPU 已确认</li>
 <li><input disabled="" type="checkbox"> Link 脚本中缓冲区段分配已规划</li>
-<li><input disabled="" type="checkbox"> Git 仓库已初始化，<code>.gitignore</code> 已配置</li>
 <li><input disabled="" type="checkbox"> CCES 工程可编译、可下载、可断点调试</li>
-<li><input disabled="" type="checkbox"> 首版 C 代码优先浮点跑通，再转定点、再优化 cycle</li>
-<li><input disabled="" type="checkbox"> 性能热点已用 <code>cycles.h</code> 或 Profile 定位，而非凭感觉优化</li>
+<li><input disabled="" type="checkbox"> 首版 C 代码用浮点跑通逻辑，再转定点、再优化 cycle</li>
+<li><input disabled="" type="checkbox"> 性能热点已用 <code>cycles.h</code> 或 Profile 定位</li>
 </ul>
-</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://example.com">Gavin</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2026/06/07/ADI-DSP%E5%B9%B3%E5%8F%B0%E5%BC%80%E5%8F%91%E7%BB%8F%E9%AA%8C/">http://example.com/2026/06/07/ADI-DSP%E5%B9%B3%E5%8F%B0%E5%BC%80%E5%8F%91%E7%BB%8F%E9%AA%8C/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">Gavin</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%A3%B0%E5%AD%A6/">声学</a><a class="post-meta__tags" href="/tags/DSP/">DSP</a><a class="post-meta__tags" href="/tags/%E5%B5%8C%E5%85%A5%E5%BC%8F/">嵌入式</a><a class="post-meta__tags" href="/tags/%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86/">信号处理</a></div><div class="post_share"><div class="social-share" data-image="https://i.ibb.co/0fP2mb0/image.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2026/06/07/%E8%AE%BA%E6%96%87%E7%BF%BB%E8%AF%91%EF%BC%9AGTCRN%E2%80%94%E2%80%94%E4%B8%80%E7%A7%8D%E8%B6%85%E4%BD%8E%E8%AE%A1%E7%AE%97%E8%B5%84%E6%BA%90%E7%9A%84%E8%AF%AD%E9%9F%B3%E5%A2%9E%E5%BC%BA%E6%A8%A1%E5%9E%8B/" title="论文翻译：GTCRN——一种超低计算资源的语音增强模型"><img class="cover" src="https://cdn.jsdelivr.net/gh/Gavin-rep/Pictures@main/gtcrn-fig1-overall-architecture.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">论文翻译：GTCRN——一种超低计算资源的语音增强模型</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/08/25/%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93%EF%BC%9A%E4%B8%8D%E5%90%8C%E7%9A%84dB/" title="知识总结：不同的dB"><img class="cover" src="https://i.ibb.co/wBsWFc5/image.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-08-25</div><div class="title">知识总结：不同的dB</div></div></a></div><div><a href="/2026/06/07/%E8%AE%BA%E6%96%87%E7%BF%BB%E8%AF%91%EF%BC%9AGTCRN%E2%80%94%E2%80%94%E4%B8%80%E7%A7%8D%E8%B6%85%E4%BD%8E%E8%AE%A1%E7%AE%97%E8%B5%84%E6%BA%90%E7%9A%84%E8%AF%AD%E9%9F%B3%E5%A2%9E%E5%BC%BA%E6%A8%A1%E5%9E%8B/" title="论文翻译：GTCRN——一种超低计算资源的语音增强模型"><img class="cover" src="https://cdn.jsdelivr.net/gh/Gavin-rep/Pictures@main/gtcrn-fig1-overall-architecture.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-06-07</div><div class="title">论文翻译：GTCRN——一种超低计算资源的语音增强模型</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://i.ibb.co/0fP2mb0/image.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Gavin</div><div class="author-info__description">Do not go gentle into that good night</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">3</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">6</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/alexandergwm"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/alexandergwm" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:wenmiaogao@163.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">不要温顺地走入那个良夜.</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%AE%E5%BD%95"><span class="toc-number">1.</span> <span class="toc-text">目录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%83%8C%E6%99%AF%E4%B8%8E%E9%97%AE%E9%A2%98"><span class="toc-number">2.</span> <span class="toc-text">背景与问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%83%8C%E6%99%AF"><span class="toc-number">2.1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E9%97%AE%E9%A2%98"><span class="toc-number">2.2.</span> <span class="toc-text">核心问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E5%AF%BC%E5%90%91"><span class="toc-number">2.3.</span> <span class="toc-text">问题导向</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%97%E6%B3%95%E5%B7%A5%E7%A8%8B%E5%B8%88%E7%9A%84%E5%AD%A6%E4%B9%A0%E8%B7%AF%E5%BE%84"><span class="toc-number">2.4.</span> <span class="toc-text">算法工程师的学习路径</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BA%8F%E8%A8%80%EF%BC%9A%E5%BC%80%E5%8F%91%E6%B5%81%E7%A8%8B%E4%B8%8E%E8%A7%92%E8%89%B2%E5%88%86%E5%B7%A5"><span class="toc-number">3.</span> <span class="toc-text">序言：开发流程与角色分工</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%97%E6%B3%95%E5%BC%80%E5%8F%91%E6%B5%81%E7%A8%8B"><span class="toc-number">3.1.</span> <span class="toc-text">算法开发流程</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E6%A8%A1%E5%9E%8B%E5%9C%A8%E7%8E%AF-MIL%EF%BC%88Model-in-the-Loop%EF%BC%89"><span class="toc-number">3.1.1.</span> <span class="toc-text">1. 模型在环 MIL（Model-in-the-Loop）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E7%AE%97%E6%B3%95%E5%9C%A8%E7%8E%AF-AIL%EF%BC%88Algorithm-in-the-Loop%EF%BC%89"><span class="toc-number">3.1.2.</span> <span class="toc-text">2. 算法在环 AIL（Algorithm-in-the-Loop）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-%E7%A1%AC%E4%BB%B6%E5%9C%A8%E7%8E%AF-HIL%EF%BC%88Hardware-in-the-Loop%EF%BC%89"><span class="toc-number">3.1.3.</span> <span class="toc-text">3. 硬件在环 HIL（Hardware-in-the-Loop）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-%E7%AE%97%E6%B3%95%E9%83%A8%E7%BD%B2"><span class="toc-number">3.1.4.</span> <span class="toc-text">4. 算法部署</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DSP-%E5%BC%80%E5%8F%91%E4%B8%AD%E7%9A%84%E8%A7%92%E8%89%B2%E5%88%86%E5%B7%A5"><span class="toc-number">3.2.</span> <span class="toc-text">DSP 开发中的角色分工</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Why%EF%BC%9A%E4%B8%BA%E4%BD%95%E9%9C%80%E8%A6%81%E5%88%86%E5%B7%A5"><span class="toc-number">3.2.1.</span> <span class="toc-text">Why：为何需要分工</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#How%EF%BC%9A%E5%90%84%E8%A7%92%E8%89%B2%E8%81%8C%E8%B4%A3"><span class="toc-number">3.2.2.</span> <span class="toc-text">How：各角色职责</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B7%A5%E5%85%B7"><span class="toc-number">4.</span> <span class="toc-text">工具</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#C-%E8%AF%AD%E8%A8%80%EF%BC%88%E6%8E%8C%E6%8F%A1%EF%BC%89"><span class="toc-number">4.1.</span> <span class="toc-text">C 语言（掌握）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#What"><span class="toc-number">4.1.1.</span> <span class="toc-text">What</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Why"><span class="toc-number">4.1.2.</span> <span class="toc-text">Why</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#How%EF%BC%9A%E4%BB%8E-MATLAB-%E8%BD%AC%E5%90%91-C"><span class="toc-number">4.1.3.</span> <span class="toc-text">How：从 MATLAB 转向 C</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#MATLAB-%E4%B8%8E-C-%E7%9A%84%E4%BA%94%E5%A4%A7%E5%B7%AE%E5%BC%82"><span class="toc-number">4.1.4.</span> <span class="toc-text">MATLAB 与 C 的五大差异</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-number">4.1.5.</span> <span class="toc-text">数据类型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%9A%E7%82%B9%E6%95%B0%E4%B8%8E-Q-%E6%A0%BC%E5%BC%8F"><span class="toc-number">4.1.6.</span> <span class="toc-text">定点数与 Q 格式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AE%97%E6%B3%95%E7%BF%BB%E8%AF%91%E7%A4%BA%E4%BE%8B"><span class="toc-number">4.1.7.</span> <span class="toc-text">算法翻译示例</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AD%98%E5%82%A8%E5%8C%BA%E5%9F%9F%E4%B8%8E%E5%8F%98%E9%87%8F%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="toc-number">4.1.8.</span> <span class="toc-text">存储区域与变量生命周期</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CCES%EF%BC%88%E6%8E%8C%E6%8F%A1%EF%BC%89"><span class="toc-number">4.2.</span> <span class="toc-text">CCES（掌握）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD"><span class="toc-number">4.2.1.</span> <span class="toc-text">核心功能</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AD%A6%E4%B9%A0%E8%B7%AF%E5%BE%84"><span class="toc-number">4.2.2.</span> <span class="toc-text">学习路径</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%B8%E5%9E%8B%E8%B0%83%E8%AF%95%E6%B5%81%E7%A8%8B"><span class="toc-number">4.2.3.</span> <span class="toc-text">典型调试流程</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Git%EF%BC%88%E6%8E%8C%E6%8F%A1%EF%BC%89"><span class="toc-number">4.3.</span> <span class="toc-text">Git（掌握）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#What-1"><span class="toc-number">4.3.1.</span> <span class="toc-text">What</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Why-1"><span class="toc-number">4.3.2.</span> <span class="toc-text">Why</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#How"><span class="toc-number">4.3.3.</span> <span class="toc-text">How</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AE%80%E6%98%93%E5%AD%A6%E4%B9%A0%E6%B3%95"><span class="toc-number">4.3.4.</span> <span class="toc-text">简易学习法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B5%8C%E5%85%A5%E5%BC%8F%E9%A1%B9%E7%9B%AE%E6%8E%A8%E8%8D%90%E5%88%86%E6%94%AF%E7%AD%96%E7%95%A5"><span class="toc-number">4.3.5.</span> <span class="toc-text">嵌入式项目推荐分支策略</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%B2%E5%8F%A3%E5%B7%A5%E5%85%B7%EF%BC%88%E4%BA%86%E8%A7%A3%EF%BC%89"><span class="toc-number">4.4.</span> <span class="toc-text">串口工具（了解）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%BA%E4%BD%95-DSP-%E5%BC%80%E5%8F%91%E9%9C%80%E8%A6%81%E4%B8%B2%E5%8F%A3"><span class="toc-number">4.4.1.</span> <span class="toc-text">为何 DSP 开发需要串口</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%83%BD%E8%A7%A3%E5%86%B3%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">4.4.2.</span> <span class="toc-text">能解决的问题</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%B2%E5%8F%A3-vs-%E4%BB%BF%E7%9C%9F%E5%99%A8"><span class="toc-number">4.4.3.</span> <span class="toc-text">串口 vs 仿真器</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DSP-%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8"><span class="toc-number">5.</span> <span class="toc-text">DSP 开发入门</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-DSP"><span class="toc-number">5.1.</span> <span class="toc-text">什么是 DSP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BA%E4%BD%95%E7%94%A8-DSP-%E5%81%9A%E9%87%8F%E4%BA%A7%E5%A4%84%E7%90%86"><span class="toc-number">5.2.</span> <span class="toc-text">为何用 DSP 做量产处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E7%A1%80%E8%AE%BE%E6%96%BD"><span class="toc-number">5.3.</span> <span class="toc-text">基础设施</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%80%82%E9%85%8D%E6%A0%87%E5%87%86-C"><span class="toc-number">5.3.1.</span> <span class="toc-text">适配标准 C</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%93%E7%94%A8%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%E7%AE%97%E6%B3%95%E5%BA%93"><span class="toc-number">5.3.2.</span> <span class="toc-text">专用信号处理算法库</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A7%84%E6%A0%BC%E4%B9%A6"><span class="toc-number">5.3.3.</span> <span class="toc-text">规格书</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DSP-%E6%9E%B6%E6%9E%84"><span class="toc-number">5.4.</span> <span class="toc-text">DSP 架构</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%86%AF%C2%B7%E8%AF%BA%E4%BE%9D%E6%9B%BC-vs-%E5%93%88%E4%BD%9B%E6%9E%B6%E6%9E%84"><span class="toc-number">5.4.1.</span> <span class="toc-text">冯·诺依曼 vs 哈佛架构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SHARC-%E6%A0%B8%E5%BF%83%EF%BC%88%E4%BA%86%E8%A7%A3%E6%9E%B6%E6%9E%84%E5%9B%BE%EF%BC%89"><span class="toc-number">5.4.2.</span> <span class="toc-text">SHARC+ 核心（了解架构图）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8"><span class="toc-number">5.5.</span> <span class="toc-text">数据存储</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BA%BF"><span class="toc-number">5.6.</span> <span class="toc-text">总线</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%98%E5%82%A8%E5%99%A8%E6%98%A0%E5%83%8F"><span class="toc-number">5.7.</span> <span class="toc-text">存储器映像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E5%8D%95%E5%85%83"><span class="toc-number">5.8.</span> <span class="toc-text">计算单元</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SIMD%EF%BC%88%E5%8D%95%E6%8C%87%E4%BB%A4%E5%A4%9A%E6%95%B0%E6%8D%AE%EF%BC%89"><span class="toc-number">5.9.</span> <span class="toc-text">SIMD（单指令多数据）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8C%87%E4%BB%A4%E5%B9%B6%E8%A1%8C%EF%BC%88ILP%EF%BC%89"><span class="toc-number">5.10.</span> <span class="toc-text">指令并行（ILP）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E8%B7%B5%E6%A1%88%E4%BE%8B%EF%BC%9A%E6%B5%AE%E7%82%B9%E6%A0%87%E9%87%8F%E7%A7%AF%E4%BC%98%E5%8C%96"><span class="toc-number">5.11.</span> <span class="toc-text">实践案例：浮点标量积优化</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BC%98%E5%8C%96%E8%BF%87%E7%A8%8B%E8%A7%A3%E8%AF%BB"><span class="toc-number">5.11.1.</span> <span class="toc-text">优化过程解读</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E6%80%A7%E8%83%BD%E7%93%B6%E9%A2%88%E6%8E%92%E6%9F%A5%E9%A1%BA%E5%BA%8F"><span class="toc-number">5.11.2.</span> <span class="toc-text">常见性能瓶颈排查顺序</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DSP-%E5%BC%80%E5%8F%91%E6%8F%90%E5%8D%87"><span class="toc-number">6.</span> <span class="toc-text">DSP 开发提升</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E8%A7%84%E8%8C%83"><span class="toc-number">6.1.</span> <span class="toc-text">代码规范</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%BA%E4%BD%95%E9%87%8D%E8%A7%86%E8%A7%84%E8%8C%83"><span class="toc-number">6.1.1.</span> <span class="toc-text">为何重视规范</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81-5S-%E6%96%B9%E6%B3%95%E8%AE%BA"><span class="toc-number">6.2.</span> <span class="toc-text">代码 5S 方法论</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9D%E7%89%88%E8%A7%84%E8%8C%83%E5%AE%9E%E4%BE%8B"><span class="toc-number">6.3.</span> <span class="toc-text">初版规范实例</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%91%BD%E5%90%8D%E8%A7%84%E8%8C%83"><span class="toc-number">6.3.1.</span> <span class="toc-text">命名规范</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8E%92%E7%89%88%E8%A7%84%E8%8C%83"><span class="toc-number">6.3.2.</span> <span class="toc-text">排版规范</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B3%A8%E9%87%8A%E8%A7%84%E8%8C%83"><span class="toc-number">6.3.3.</span> <span class="toc-text">注释规范</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%87%BD%E6%95%B0%E8%A7%84%E8%8C%83"><span class="toc-number">6.3.4.</span> <span class="toc-text">函数规范</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1"><span class="toc-number">6.4.</span> <span class="toc-text">架构设计</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%BA%E4%BD%95%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E6%98%AF%E5%9F%BA%E6%9C%AC%E5%8A%9F"><span class="toc-number">6.4.1.</span> <span class="toc-text">为何架构设计是基本功</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AE%97%E6%B3%95%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%A6%82%E4%BD%95%E4%B8%BB%E5%AF%BC%E6%9E%B6%E6%9E%84"><span class="toc-number">6.4.2.</span> <span class="toc-text">算法工程师如何主导架构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8E%A8%E8%8D%90%E8%BD%AF%E4%BB%B6%E5%88%86%E5%B1%82"><span class="toc-number">6.4.3.</span> <span class="toc-text">推荐软件分层</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9E%B6%E6%9E%84%E5%B8%AE%E6%89%8B"><span class="toc-number">6.4.4.</span> <span class="toc-text">架构帮手</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9F%A5%E8%AF%86%E6%8B%93%E5%B1%95"><span class="toc-number">6.5.</span> <span class="toc-text">知识拓展</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%AD%E6%96%AD"><span class="toc-number">6.5.1.</span> <span class="toc-text">中断</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#RTOS-%E8%B0%83%E5%BA%A6"><span class="toc-number">6.5.2.</span> <span class="toc-text">RTOS 调度</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B9%92%E4%B9%93-Buffer"><span class="toc-number">6.5.3.</span> <span class="toc-text">乒乓 Buffer</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%80%A7%E8%83%BD%E5%8F%82%E6%95%B0"><span class="toc-number">6.5.4.</span> <span class="toc-text">性能参数</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%A8%E8%8D%90%E8%B5%84%E6%96%99"><span class="toc-number">6.6.</span> <span class="toc-text">推荐资料</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9E%E9%A1%BE%E4%B8%8E%E6%80%BB%E7%BB%93"><span class="toc-number">7.</span> <span class="toc-text">回顾与总结</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8A%E6%89%8B%E6%A3%80%E6%9F%A5%E6%B8%85%E5%8D%95"><span class="toc-number">7.1.</span> <span class="toc-text">上手检查清单</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/06/07/ADI-DSP%E5%B9%B3%E5%8F%B0%E5%BC%80%E5%8F%91%E7%BB%8F%E9%AA%8C/" title="ADI-DSP平台开发经验">ADI-DSP平台开发经验</a><time datetime="2026-06-07T02:30:00.000Z" title="发表于 2026-06-07 10:30:00">2026-06-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/06/07/%E8%AE%BA%E6%96%87%E7%BF%BB%E8%AF%91%EF%BC%9AGTCRN%E2%80%94%E2%80%94%E4%B8%80%E7%A7%8D%E8%B6%85%E4%BD%8E%E8%AE%A1%E7%AE%97%E8%B5%84%E6%BA%90%E7%9A%84%E8%AF%AD%E9%9F%B3%E5%A2%9E%E5%BC%BA%E6%A8%A1%E5%9E%8B/" title="论文翻译：GTCRN——一种超低计算资源的语音增强模型"><img src="https://cdn.jsdelivr.net/gh/Gavin-rep/Pictures@main/gtcrn-fig1-overall-architecture.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="论文翻译：GTCRN——一种超低计算资源的语音增强模型"/></a><div class="content"><a class="title" href="/2026/06/07/%E8%AE%BA%E6%96%87%E7%BF%BB%E8%AF%91%EF%BC%9AGTCRN%E2%80%94%E2%80%94%E4%B8%80%E7%A7%8D%E8%B6%85%E4%BD%8E%E8%AE%A1%E7%AE%97%E8%B5%84%E6%BA%90%E7%9A%84%E8%AF%AD%E9%9F%B3%E5%A2%9E%E5%BC%BA%E6%A8%A1%E5%9E%8B/" title="论文翻译：GTCRN——一种超低计算资源的语音增强模型">论文翻译：GTCRN——一种超低计算资源的语音增强模型</a><time datetime="2026-06-07T01:00:00.000Z" title="发表于 2026-06-07 09:00:00">2026-06-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/08/25/%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93%EF%BC%9A%E4%B8%8D%E5%90%8C%E7%9A%84dB/" title="知识总结：不同的dB"><img src="https://i.ibb.co/wBsWFc5/image.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="知识总结：不同的dB"/></a><div class="content"><a class="title" href="/2024/08/25/%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93%EF%BC%9A%E4%B8%8D%E5%90%8C%E7%9A%84dB/" title="知识总结：不同的dB">知识总结：不同的dB</a><time datetime="2024-08-25T08:12:47.278Z" title="发表于 2024-08-25 16:12:47">2024-08-25</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2026 By Gavin</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Have a nice day!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+<h3 id="6-3-全书总结"><a href="#6-3-全书总结" class="headerlink" title="6.3 全书总结"></a>6.3 全书总结</h3><ol>
+<li>DSP 开发是在硬件约束下实现算法落地，按「翻译 → 对齐 → 内存 → 性能 → 规范」循序渐进；</li>
+<li>四级验证（MIL&#x2F;AIL&#x2F;HIL&#x2F;部署）构成标准测试路径，AIL 阶段的数值对比是初学者最应掌握的技能；</li>
+<li>硬件基础（存储层次、总线、SIMD、DMA）决定 optimizations 的上限，需在写代码前建立认知；</li>
+<li>代码规范与架构设计不是额外负担，而是降低长期维护成本的投资；</li>
+<li>以实践驱动学习，用到什么查什么，规格书和官方库是最好的老师。</li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://example.com">Gavin</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2026/06/07/ADI-DSP%E5%B9%B3%E5%8F%B0%E5%BC%80%E5%8F%91%E7%BB%8F%E9%AA%8C/">http://example.com/2026/06/07/ADI-DSP%E5%B9%B3%E5%8F%B0%E5%BC%80%E5%8F%91%E7%BB%8F%E9%AA%8C/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">Gavin</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%A3%B0%E5%AD%A6/">声学</a><a class="post-meta__tags" href="/tags/DSP/">DSP</a><a class="post-meta__tags" href="/tags/%E5%B5%8C%E5%85%A5%E5%BC%8F/">嵌入式</a><a class="post-meta__tags" href="/tags/%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86/">信号处理</a></div><div class="post_share"><div class="social-share" data-image="https://i.ibb.co/0fP2mb0/image.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2026/06/07/%E8%AE%BA%E6%96%87%E7%BF%BB%E8%AF%91%EF%BC%9AGTCRN%E2%80%94%E2%80%94%E4%B8%80%E7%A7%8D%E8%B6%85%E4%BD%8E%E8%AE%A1%E7%AE%97%E8%B5%84%E6%BA%90%E7%9A%84%E8%AF%AD%E9%9F%B3%E5%A2%9E%E5%BC%BA%E6%A8%A1%E5%9E%8B/" title="论文翻译：GTCRN——一种超低计算资源的语音增强模型"><img class="cover" src="https://cdn.jsdelivr.net/gh/Gavin-rep/Pictures@main/gtcrn-fig1-overall-architecture.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">论文翻译：GTCRN——一种超低计算资源的语音增强模型</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/08/25/%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93%EF%BC%9A%E4%B8%8D%E5%90%8C%E7%9A%84dB/" title="知识总结：不同的dB"><img class="cover" src="https://i.ibb.co/wBsWFc5/image.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-08-25</div><div class="title">知识总结：不同的dB</div></div></a></div><div><a href="/2026/06/07/%E8%AE%BA%E6%96%87%E7%BF%BB%E8%AF%91%EF%BC%9AGTCRN%E2%80%94%E2%80%94%E4%B8%80%E7%A7%8D%E8%B6%85%E4%BD%8E%E8%AE%A1%E7%AE%97%E8%B5%84%E6%BA%90%E7%9A%84%E8%AF%AD%E9%9F%B3%E5%A2%9E%E5%BC%BA%E6%A8%A1%E5%9E%8B/" title="论文翻译：GTCRN——一种超低计算资源的语音增强模型"><img class="cover" src="https://cdn.jsdelivr.net/gh/Gavin-rep/Pictures@main/gtcrn-fig1-overall-architecture.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-06-07</div><div class="title">论文翻译：GTCRN——一种超低计算资源的语音增强模型</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://i.ibb.co/0fP2mb0/image.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Gavin</div><div class="author-info__description">Do not go gentle into that good night</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">3</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">6</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/alexandergwm"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/alexandergwm" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:wenmiaogao@163.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">不要温顺地走入那个良夜.</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E7%AB%A0-%E5%BB%BA%E7%AB%8B%E6%95%B4%E4%BD%93%E8%AE%A4%E8%AF%86"><span class="toc-number">2.</span> <span class="toc-text">第一章 建立整体认识</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-MATLAB-%E4%B8%8E-DSP-%E5%BC%80%E5%8F%91%E7%9A%84%E6%80%9D%E7%BB%B4%E5%B7%AE%E5%BC%82"><span class="toc-number">2.1.</span> <span class="toc-text">1.1 MATLAB 与 DSP 开发的思维差异</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E5%88%9D%E5%AD%A6%E8%80%85%E9%9D%A2%E4%B8%B4%E7%9A%84%E5%85%B8%E5%9E%8B%E5%9B%B0%E9%9A%BE"><span class="toc-number">2.2.</span> <span class="toc-text">1.2 初学者面临的典型困难</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-%E6%8E%A8%E8%8D%90%E5%AD%A6%E4%B9%A0%E8%B7%AF%E5%BE%84"><span class="toc-number">2.3.</span> <span class="toc-text">1.3 推荐学习路径</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%AC%E7%AB%A0%E5%B0%8F%E7%BB%93"><span class="toc-number">2.4.</span> <span class="toc-text">本章小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E7%AB%A0-%E7%AE%97%E6%B3%95%E9%AA%8C%E8%AF%81%E4%B8%8E%E5%9B%A2%E9%98%9F%E5%8D%8F%E4%BD%9C"><span class="toc-number">3.</span> <span class="toc-text">第二章 算法验证与团队协作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E5%B5%8C%E5%85%A5%E5%BC%8F%E7%AE%97%E6%B3%95%E7%9A%84%E5%9B%9B%E7%BA%A7%E9%AA%8C%E8%AF%81"><span class="toc-number">3.1.</span> <span class="toc-text">2.1 嵌入式算法的四级验证</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E5%90%84%E9%98%B6%E6%AE%B5%E7%9A%84%E8%BE%93%E5%85%A5%E3%80%81%E8%BE%93%E5%87%BA%E4%B8%8E%E9%80%9A%E8%BF%87%E5%87%86%E5%88%99"><span class="toc-number">3.2.</span> <span class="toc-text">2.2 各阶段的输入、输出与通过准则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-%E7%AE%97%E6%B3%95%E6%96%87%E6%A1%A3%E5%BA%94%E5%8C%85%E5%90%AB%E7%9A%84%E5%86%85%E5%AE%B9"><span class="toc-number">3.3.</span> <span class="toc-text">2.3 算法文档应包含的内容</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-%E5%9B%A2%E9%98%9F%E8%A7%92%E8%89%B2%E4%B8%8E%E7%AE%97%E6%B3%95%E5%B7%A5%E7%A8%8B%E5%B8%88%E7%9A%84%E8%BE%B9%E7%95%8C"><span class="toc-number">3.4.</span> <span class="toc-text">2.4 团队角色与算法工程师的边界</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%AC%E7%AB%A0%E5%B0%8F%E7%BB%93-1"><span class="toc-number">3.5.</span> <span class="toc-text">本章小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E7%AB%A0-%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7"><span class="toc-number">4.</span> <span class="toc-text">第三章 开发工具</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-C-%E8%AF%AD%E8%A8%80%EF%BC%9A%E7%AE%97%E6%B3%95%E8%90%BD%E5%9C%B0%E7%9A%84%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80"><span class="toc-number">4.1.</span> <span class="toc-text">3.1 C 语言：算法落地的语言基础</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-1-%E4%B8%BA%E4%BD%95%E9%80%89%E6%8B%A9-C-%E8%AF%AD%E8%A8%80"><span class="toc-number">4.1.1.</span> <span class="toc-text">3.1.1 为何选择 C 语言</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-2-%E4%BB%8E-MATLAB-%E5%88%B0-C-%E7%9A%84%E7%BF%BB%E8%AF%91%E6%96%B9%E6%B3%95"><span class="toc-number">4.1.2.</span> <span class="toc-text">3.1.2 从 MATLAB 到 C 的翻译方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-3-%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-number">4.1.3.</span> <span class="toc-text">3.1.3 数据类型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-4-%E7%AE%97%E6%B3%95%E7%BF%BB%E8%AF%91%E7%A4%BA%E4%BE%8B"><span class="toc-number">4.1.4.</span> <span class="toc-text">3.1.4 算法翻译示例</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-5-%E5%86%85%E5%AD%98%E5%8C%BA%E5%9F%9F%E4%B8%8E%E5%8F%98%E9%87%8F%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="toc-number">4.1.5.</span> <span class="toc-text">3.1.5 内存区域与变量生命周期</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-CCES-%E9%9B%86%E6%88%90%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83"><span class="toc-number">4.2.</span> <span class="toc-text">3.2 CCES 集成开发环境</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-%E4%B8%B2%E5%8F%A3%E8%B0%83%E8%AF%95"><span class="toc-number">4.3.</span> <span class="toc-text">3.3 串口调试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%AC%E7%AB%A0%E5%B0%8F%E7%BB%93-2"><span class="toc-number">4.4.</span> <span class="toc-text">本章小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E5%9B%9B%E7%AB%A0-DSP-%E7%A1%AC%E4%BB%B6%E5%9F%BA%E7%A1%80"><span class="toc-number">5.</span> <span class="toc-text">第四章 DSP 硬件基础</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-%E6%95%B0%E5%AD%97%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%E5%99%A8%E6%A6%82%E8%BF%B0"><span class="toc-number">5.1.</span> <span class="toc-text">4.1 数字信号处理器概述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-%E5%BC%80%E5%8F%91%E5%9F%BA%E7%A1%80%E8%AE%BE%E6%96%BD"><span class="toc-number">5.2.</span> <span class="toc-text">4.2 开发基础设施</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%89%A9%E5%B1%95-C-%E4%B8%8E%E7%AE%97%E6%B3%95%E5%BA%93"><span class="toc-number">5.2.1.</span> <span class="toc-text">扩展 C 与算法库</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A7%84%E6%A0%BC%E4%B9%A6"><span class="toc-number">5.2.2.</span> <span class="toc-text">规格书</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-%E5%A4%84%E7%90%86%E5%99%A8%E6%9E%B6%E6%9E%84"><span class="toc-number">5.3.</span> <span class="toc-text">4.3 处理器架构</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%93%88%E4%BD%9B%E6%9E%B6%E6%9E%84-vs-%E5%86%AF%C2%B7%E8%AF%BA%E4%BE%9D%E6%9B%BC%E6%9E%B6%E6%9E%84"><span class="toc-number">5.3.1.</span> <span class="toc-text">哈佛架构 vs 冯·诺依曼架构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SHARC-%E6%A0%B8%E5%BF%83%E7%BB%93%E6%9E%84"><span class="toc-number">5.3.2.</span> <span class="toc-text">SHARC+ 核心结构</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-4-%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F"><span class="toc-number">5.4.</span> <span class="toc-text">4.4 存储系统</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AD%98%E5%82%A8%E5%B1%82%E6%AC%A1"><span class="toc-number">5.4.1.</span> <span class="toc-text">存储层次</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%80%BB%E7%BA%BF%E4%B8%8E%E5%9C%B0%E5%9D%80%E6%98%A0%E5%B0%84"><span class="toc-number">5.4.2.</span> <span class="toc-text">总线与地址映射</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-5-%E8%AE%A1%E7%AE%97%E4%B8%8E%E5%B9%B6%E8%A1%8C"><span class="toc-number">5.5.</span> <span class="toc-text">4.5 计算与并行</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E8%AE%A1%E7%AE%97%E5%8D%95%E5%85%83"><span class="toc-number">5.5.1.</span> <span class="toc-text">基本计算单元</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SIMD%EF%BC%88%E5%8D%95%E6%8C%87%E4%BB%A4%E5%A4%9A%E6%95%B0%E6%8D%AE%EF%BC%89"><span class="toc-number">5.5.2.</span> <span class="toc-text">SIMD（单指令多数据）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8C%87%E4%BB%A4%E7%BA%A7%E5%B9%B6%E8%A1%8C%EF%BC%88ILP%EF%BC%89"><span class="toc-number">5.5.3.</span> <span class="toc-text">指令级并行（ILP）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-6-%E7%BC%96%E8%AF%91%E5%99%A8%E4%BC%98%E5%8C%96%EF%BC%9A%E6%A0%87%E9%87%8F%E7%A7%AF%E6%A1%88%E4%BE%8B"><span class="toc-number">5.6.</span> <span class="toc-text">4.6 编译器优化：标量积案例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%AC%E7%AB%A0%E5%B0%8F%E7%BB%93-3"><span class="toc-number">5.7.</span> <span class="toc-text">本章小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%BA%94%E7%AB%A0-%E5%B7%A5%E7%A8%8B%E5%8C%96%E5%AE%9E%E8%B7%B5"><span class="toc-number">6.</span> <span class="toc-text">第五章 工程化实践</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-%E4%BB%A3%E7%A0%81%E8%A7%84%E8%8C%83"><span class="toc-number">6.1.</span> <span class="toc-text">5.1 代码规范</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%91%BD%E5%90%8D%E8%A7%84%E8%8C%83"><span class="toc-number">6.1.1.</span> <span class="toc-text">命名规范</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8E%92%E7%89%88%E4%B8%8E%E6%B3%A8%E9%87%8A"><span class="toc-number">6.1.2.</span> <span class="toc-text">排版与注释</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E8%B4%A8%E9%87%8F%E7%BB%B4%E6%8A%A4"><span class="toc-number">6.1.3.</span> <span class="toc-text">代码质量维护</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1"><span class="toc-number">6.2.</span> <span class="toc-text">5.2 架构设计</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%BA%E4%BD%95%E9%9C%80%E8%A6%81%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1"><span class="toc-number">6.2.1.</span> <span class="toc-text">为何需要架构设计</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8E%A8%E8%8D%90%E8%BD%AF%E4%BB%B6%E5%88%86%E5%B1%82"><span class="toc-number">6.2.2.</span> <span class="toc-text">推荐软件分层</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%80%A7%E8%83%BD%E9%A2%84%E7%AE%97"><span class="toc-number">6.2.3.</span> <span class="toc-text">性能预算</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#DMA-%E4%B8%8E%E7%A1%AC%E4%BB%B6%E5%8A%A0%E9%80%9F%E5%99%A8"><span class="toc-number">6.2.4.</span> <span class="toc-text">DMA 与硬件加速器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Cycle-%E7%BB%9F%E8%AE%A1"><span class="toc-number">6.2.5.</span> <span class="toc-text">Cycle 统计</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-3-%E4%B8%AD%E6%96%AD%E3%80%81RTOS-%E4%B8%8E%E7%BC%93%E5%86%B2%E6%9C%BA%E5%88%B6"><span class="toc-number">6.3.</span> <span class="toc-text">5.3 中断、RTOS 与缓冲机制</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%AD%E6%96%AD%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99"><span class="toc-number">6.3.1.</span> <span class="toc-text">中断设计原则</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B9%92%E4%B9%93%E7%BC%93%E5%86%B2"><span class="toc-number">6.3.2.</span> <span class="toc-text">乒乓缓冲</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#RTOS-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="toc-number">6.3.3.</span> <span class="toc-text">RTOS 基本概念</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-4-%E6%80%A7%E8%83%BD%E5%8F%82%E6%95%B0%E4%BC%B0%E7%AE%97"><span class="toc-number">6.4.</span> <span class="toc-text">5.4 性能参数估算</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%AC%E7%AB%A0%E5%B0%8F%E7%BB%93-4"><span class="toc-number">6.5.</span> <span class="toc-text">本章小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E5%85%AD%E7%AB%A0-%E9%99%84%E5%BD%95"><span class="toc-number">7.</span> <span class="toc-text">第六章 附录</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-1-%E6%8E%A8%E8%8D%90%E9%98%85%E8%AF%BB"><span class="toc-number">7.1.</span> <span class="toc-text">6.1 推荐阅读</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-2-%E6%96%B0%E9%A1%B9%E7%9B%AE%E4%B8%8A%E6%89%8B%E6%A3%80%E6%9F%A5%E6%B8%85%E5%8D%95"><span class="toc-number">7.2.</span> <span class="toc-text">6.2 新项目上手检查清单</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-3-%E5%85%A8%E4%B9%A6%E6%80%BB%E7%BB%93"><span class="toc-number">7.3.</span> <span class="toc-text">6.3 全书总结</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/06/07/ADI-DSP%E5%B9%B3%E5%8F%B0%E5%BC%80%E5%8F%91%E7%BB%8F%E9%AA%8C/" title="ADI-DSP平台开发经验">ADI-DSP平台开发经验</a><time datetime="2026-06-07T02:30:00.000Z" title="发表于 2026-06-07 10:30:00">2026-06-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/06/07/%E8%AE%BA%E6%96%87%E7%BF%BB%E8%AF%91%EF%BC%9AGTCRN%E2%80%94%E2%80%94%E4%B8%80%E7%A7%8D%E8%B6%85%E4%BD%8E%E8%AE%A1%E7%AE%97%E8%B5%84%E6%BA%90%E7%9A%84%E8%AF%AD%E9%9F%B3%E5%A2%9E%E5%BC%BA%E6%A8%A1%E5%9E%8B/" title="论文翻译：GTCRN——一种超低计算资源的语音增强模型"><img src="https://cdn.jsdelivr.net/gh/Gavin-rep/Pictures@main/gtcrn-fig1-overall-architecture.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="论文翻译：GTCRN——一种超低计算资源的语音增强模型"/></a><div class="content"><a class="title" href="/2026/06/07/%E8%AE%BA%E6%96%87%E7%BF%BB%E8%AF%91%EF%BC%9AGTCRN%E2%80%94%E2%80%94%E4%B8%80%E7%A7%8D%E8%B6%85%E4%BD%8E%E8%AE%A1%E7%AE%97%E8%B5%84%E6%BA%90%E7%9A%84%E8%AF%AD%E9%9F%B3%E5%A2%9E%E5%BC%BA%E6%A8%A1%E5%9E%8B/" title="论文翻译：GTCRN——一种超低计算资源的语音增强模型">论文翻译：GTCRN——一种超低计算资源的语音增强模型</a><time datetime="2026-06-07T01:00:00.000Z" title="发表于 2026-06-07 09:00:00">2026-06-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/08/25/%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93%EF%BC%9A%E4%B8%8D%E5%90%8C%E7%9A%84dB/" title="知识总结：不同的dB"><img src="https://i.ibb.co/wBsWFc5/image.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="知识总结：不同的dB"/></a><div class="content"><a class="title" href="/2024/08/25/%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93%EF%BC%9A%E4%B8%8D%E5%90%8C%E7%9A%84dB/" title="知识总结：不同的dB">知识总结：不同的dB</a><time datetime="2024-08-25T08:12:47.278Z" title="发表于 2024-08-25 16:12:47">2024-08-25</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2026 By Gavin</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Have a nice day!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
   window.MathJax = {
     tex: {
       inlineMath: [['$', '$'], ['\\(', '\\)']],
